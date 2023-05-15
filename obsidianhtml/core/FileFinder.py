@@ -32,7 +32,7 @@ class FileFinder:
         output["alias"] = alias
         output["header"] = anchor
 
-        if link is None or link == "":
+        if link is None or simple_path == "":
             return output
 
         if simple_path == "":
@@ -41,10 +41,10 @@ class FileFinder:
         # Find file. Values will be False when file is not found.
         output["rtr_path_str"], output["fo"] = self._FindFile(simple_path, html_url_prefix, force_filename_to_lowercase)
 
-        if output["fo"] is False and link.startswith("/"):
+        if output["fo"] is False and simple_path.startswith("/"):
             output["rtr_path_str"], output["fo"] = self._FindFile(simple_path[1:], html_url_prefix, force_filename_to_lowercase)
 
-        if output["fo"] is False and not link.startswith("/"):
+        if output["fo"] is False and not simple_path.startswith("/"):
             output["rtr_path_str"], output["fo"] = self._FindFile("/" + simple_path, html_url_prefix, force_filename_to_lowercase)
 
         return output
