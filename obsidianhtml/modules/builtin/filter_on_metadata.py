@@ -18,6 +18,10 @@ class FilterOnMetadataModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "filter_on_metadata"
+
+    @staticmethod
     def requires():
         return tuple(["index/markdown_files.json", "index/files.json", "index/metadata.json", "paths.json"])
 

@@ -4,6 +4,10 @@ from ..base_classes import ObsidianHtmlModule
 
 class StopModule(ObsidianHtmlModule):
     @staticmethod
+    def friendly_name():
+        return "stop"
+
+    @staticmethod
     def requires():
         return tuple()
 

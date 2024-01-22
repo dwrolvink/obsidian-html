@@ -9,6 +9,9 @@ class ResourceLoggerMetaModule(ObsidianHtmlModule):
     """
     This module keeps track of the resource states, and logs them to `log.resources`
     """
+    @staticmethod
+    def friendly_name():
+        return "resource_logger"
 
     @staticmethod
     def requires():

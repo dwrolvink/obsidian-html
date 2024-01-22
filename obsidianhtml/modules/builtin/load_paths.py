@@ -14,6 +14,10 @@ class LoadPathsModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "load_paths"
+
+    @staticmethod
     def requires():
         return tuple(["config.yml"])
 

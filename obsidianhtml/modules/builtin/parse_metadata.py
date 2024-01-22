@@ -18,6 +18,10 @@ class ParseMetadataModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "parse_metadata"
+
+    @staticmethod
     def requires():
         return tuple(["paths.json", "index/markdown_files.json"])
 

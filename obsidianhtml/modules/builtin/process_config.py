@@ -10,6 +10,9 @@ class ProcessConfigModule(ObsidianHtmlModule):
     After merging the user_config with the default_config to arrive at the config.yml, we need to do some checks,
     and derrive values from the config to make decision making easier later on.
     """
+    @staticmethod
+    def friendly_name():
+        return "process_config"
 
     @staticmethod
     def requires():

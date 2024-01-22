@@ -17,6 +17,9 @@ class PrepareOutputFoldersModule(ObsidianHtmlModule):
     This module will create the files.yml file, which lists all the files in the source folder (vault or md folder), minus the excluded files.
     It will also create the aliased_files.yml file, which contains references to files by an alias.
     """
+    @staticmethod
+    def friendly_name():
+        return "prepare_output_folders"
 
     @staticmethod
     def requires():

@@ -18,6 +18,9 @@ class SetSubfolderModule(ObsidianHtmlModule):
     """
     This module replaces any html_url_prefix settings when `--subfolder <subfolder>` is configured on the commandline
     """
+    @staticmethod
+    def friendly_name():
+        return "set_subfolder"
 
     @staticmethod
     def requires():

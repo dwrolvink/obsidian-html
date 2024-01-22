@@ -11,6 +11,10 @@ class LoadGrapherModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "load_graphers"
+
+    @staticmethod
     def requires():
         return tuple(["config.yml"])
 

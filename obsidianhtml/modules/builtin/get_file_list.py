@@ -20,6 +20,10 @@ class GetFileListModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "get_file_list"    
+
+    @staticmethod
     def requires():
         return tuple(["paths.json", "config.yml"])
 

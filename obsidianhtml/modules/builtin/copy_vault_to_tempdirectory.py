@@ -18,6 +18,11 @@ class VaultCopyModule(ObsidianHtmlModule):
     when the function ends.
     """
 
+
+    @staticmethod
+    def friendly_name():
+        return "copy_vault_to_tempdirectory"    
+
     @staticmethod
     def requires():
         return tuple(["config.yml", "paths.json", "index/files.json"])

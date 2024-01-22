@@ -15,6 +15,10 @@ class HtmlTemplaterModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "html_templater"    
+
+    @staticmethod
     def requires():
         return tuple(["config.yml"])
 

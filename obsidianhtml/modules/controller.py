@@ -5,7 +5,7 @@ import importlib
 
 from pathlib import Path
 
-from . import builtin
+from . import builtin_module_aliases
 from .lib import verbose_enough
 
 
@@ -198,10 +198,10 @@ def get_module_class(module_name, module_class_name, module_source):
     # try getting the module based on the name, in case of builtin modules
     # this saves dumb typing
     if module_source == None:
-        if module_name in builtin.builtin_module_aliases.keys():
-            return builtin.builtin_module_aliases[module_name]
-        elif module_class_name in builtin.builtin_module_aliases.keys():
-            return builtin.builtin_module_aliases[module_class_name]
+        if module_name in builtin_module_aliases.keys():
+            return builtin_module_aliases[module_name]
+        elif module_class_name in builtin_module_aliases.keys():
+            return builtin_module_aliases[module_class_name]
         else:
             raise Exception(f"Could not find match for module {module_name} ({module_class_name}) in the modules/builtin directory. " + "Is the module class imported in modules/builtin/__init__.py ?")
     else:

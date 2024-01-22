@@ -8,6 +8,10 @@ class BinaryModule(ObsidianHtmlModule):
     """Used to run any binary as a module"""
 
     @staticmethod
+    def friendly_name():
+        return "binary"
+
+    @staticmethod
     def requires(**kwargs):
         if "binary_path" not in kwargs.keys():
             raise Exception("cannot run static method requires on BinaryModule without binary_path kwarg")

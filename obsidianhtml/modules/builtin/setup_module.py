@@ -31,6 +31,10 @@ class SetupModule(ObsidianHtmlModule):
     """
 
     @staticmethod
+    def friendly_name():
+        return "setup_module"
+
+    @staticmethod
     def requires():
         return tuple()
 
@@ -221,7 +225,7 @@ class SetupModule(ObsidianHtmlModule):
 
         # we could also have a user that removes a lot of modules, or doesn't have the most recent one's
         # in their list yet, we want to notify them of the available built-in modules
-        from . import builtin_module_aliases
+        from .. import builtin_module_aliases
 
         module_overview["<internal>"] = {}
         module_overview["<available-builtin>"] = {}

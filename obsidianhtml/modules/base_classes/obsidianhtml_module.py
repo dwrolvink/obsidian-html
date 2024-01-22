@@ -64,6 +64,10 @@ class ObsidianHtmlModule(ABC):
         self.mod_config = {}
         self.define_mod_config_defaults()
 
+    @classmethod
+    def friendly_name(cls):
+        return cls.__name__
+
     def set_instance_id(self):
         # set id for the instance.
         # currently only used by binary modules
