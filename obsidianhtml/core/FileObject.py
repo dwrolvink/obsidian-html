@@ -38,6 +38,7 @@ get the correct link based on the configurations.
 class FileObject:
     pb = None  # contains all config, paths, etc (global pass in config object)
     path = None  # hashtable with all relevant file paths
+    annotated_file = None  # dict as provided by the hydrate_file_list module
     link = None  # hashtable with all links
     metadata = None  # information on the note, such as modified_date
     md = None  # MarkdownPage object
@@ -46,12 +47,14 @@ class FileObject:
     processed_ntm = False  # whether the note has already been processed in the note --> markdown flow
     processed_mth = False  # whether the note has already been processed in the markdown --> html flow
 
-    def __init__(self, pb):
+    def __init__(self, pb, annotated_file=None):
         self.pb = pb
 
         self.path = {}
         self.link = {}
         self.metadata = {}
+
+        self.annotated_file = annotated_file
 
         # These values are not set under self.compile_metadata()
         # So the default values need to be set here.
@@ -72,6 +75,11 @@ class FileObject:
         return True
 
     def init_note_path(self, source_file_absolute_path, compile_metadata=True):
+
+        # if self.annotated_file is None:
+        #     raise Exception('FileObject should have been instantiated with annotated_file, but wasnt')
+        # source_file_absolute_path = Path(self.annotated_file["path"])
+
         self.oh_file_type = "obs_to_md"
 
         # Configured folders
@@ -120,8 +128,10 @@ class FileObject:
 
         # compile the path['markdown'] section, or reuse the section from the previous step
         if source_file_absolute_path is None:
+        #if "note" in self.path:
             source_file_absolute_path = self.path["markdown"]["file_absolute_path"]
         else:
+            # source_file_absolute_path = Path(self.annotated_file["path"])
             self.path["markdown"] = {}
             self.path["markdown"]["folder_path"] = source_folder_path
             self.path["markdown"]["file_absolute_path"] = source_file_absolute_path

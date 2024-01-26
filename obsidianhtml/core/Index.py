@@ -44,7 +44,7 @@ class Index:
             paths = json.loads(f.read())
         input_folder = Path(paths["input_folder"])
 
-        with open(module_data_folder + "/index/files.json", "r") as f:
+        with open(module_data_folder + "/index/files_annotated.json", "r") as f:
             files = json.loads(f.read())
 
         # # add index.md when converting straight from md to html
@@ -53,16 +53,16 @@ class Index:
         #     files.append(input_folder.joinpath("index.md"))
 
         for file in files:
-            file = Path(file)
-            if file.is_dir():
+            file_path = Path(file["path"])
+            if file_path.is_dir():
                 continue
 
-            fo = FileObject(pb)
+            fo = FileObject(pb, file)
 
             # Compile paths
             if pb.gc("toggles/compile_md", cached=True):
                 # compile note --> markdown
-                fo.init_note_path(file)
+                fo.init_note_path(file_path)
                 fo.compile_metadata(fo.path["note"]["file_absolute_path"], cached=True)
 
                 if pb.gc("toggles/compile_html", cached=True):
@@ -74,7 +74,7 @@ class Index:
                 self.add_file_object_to_file_tree(fo.path["note"]["file_relative_path"].as_posix(), fo)
             else:
                 # compile markdown --> html (based on the found markdown path)
-                fo.init_markdown_path(file)
+                fo.init_markdown_path(file_path)
                 fo.compile_metadata(fo.path["markdown"]["file_absolute_path"], cached=True)
 
                 # Add to tree
