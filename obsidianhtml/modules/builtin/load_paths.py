@@ -35,11 +35,11 @@ class LoadPathsModule(ObsidianHtmlModule):
             return ""
 
         # Use user provided obsidian_folder_path_str
-        if "obsidian_folder_path_str" in self.config and self.config["obsidian_folder_path_str"] not in ["", "<DEPRECATED>"]:
-            result = find_vault_folder_by_entrypoint(self.config["obsidian_folder_path_str"])
+        if self.config.has("obsidian_folder_path_str") and self.gc("obsidian_folder_path_str") not in ["", "<DEPRECATED>"]:
+            result = find_vault_folder_by_entrypoint(self.gc("obsidian_folder_path_str"))
             # check that entrypoint is located inside an obsidian vault
             if result:
-                if Path(result) != Path(self.config["obsidian_folder_path_str"]).resolve():
+                if Path(result) != Path(self.gc("obsidian_folder_path_str")).resolve():
                     print(f"Error: The configured obsidian_folder_path_str is not the vault root. Change its value to {result}")
                     exit(1)
                 return self.check_entrypoint_exists(result)
@@ -49,21 +49,21 @@ class LoadPathsModule(ObsidianHtmlModule):
             return self.check_entrypoint_exists(result)
 
         # Determine obsidian_folder_path_str from obsidian_entrypoint_path_str
-        result = find_vault_folder_by_entrypoint(self.config["obsidian_entrypoint_path_str"])
+        result = find_vault_folder_by_entrypoint(self.gc("obsidian_entrypoint_path_str"))
         if result:
             return self.check_entrypoint_exists(result)
         else:
             print(
-                f"ERROR: Obsidian vault not found based on entrypoint {self.config['obsidian_entrypoint_path_str']}.\n\tDid you provide a note that is in a valid vault? (Tip: obsidianhtml looks for the .obsidian folder)"
+                f"ERROR: Obsidian vault not found based on entrypoint {self.gc('obsidian_entrypoint_path_str')}.\n\tDid you provide a note that is in a valid vault? (Tip: obsidianhtml looks for the .obsidian folder)"
             )
             exit(1)
 
     def check_entrypoint_exists(self, entrypoint):
         """Returns the inputted entrypoint, if the file exists, otherwise it errors"""
-        if self.config["toggles"]["compile_md"] is False:  # don't check vault if we are compiling directly from markdown to html
+        if self.gc("toggles/compile_md") is False:  # don't check vault if we are compiling directly from markdown to html
             return entrypoint
         if not Path(entrypoint).exists():
-            print(f"Error: entrypoint note {self.config['obsidian_entrypoint_path_str']} does not exist.")
+            print(f"Error: entrypoint note {self.gc('obsidian_entrypoint_path_str')} does not exist.")
             exit(1)
         return entrypoint
 

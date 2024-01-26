@@ -155,6 +155,9 @@ class SetupModule(ObsidianHtmlModule):
         with open(self.module_data_folder + "/guid.txt", "w") as f:
             f.write(str(uuid.uuid4()))
 
+        # Set env var so other modules know where to find the module folder
+        os.environ["OBS_MODULE_DATA_FOLDER"] = module_data_folder.resolve().as_posix()
+
         # write config files to module data folder - now we have access to info such as verbosity
         self.modfile("config.yml", config).to_yaml().write()
         self.modfile("user_config.yml", user_config).to_yaml().write()

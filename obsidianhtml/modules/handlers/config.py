@@ -6,7 +6,7 @@ def get_config_cached(config_dict, path: str):
     return get_config(config_dict, path)
 
 
-def get_config(config_dict, path: str):
+def get_config(config_dict, path: str, fail_on_missing=True):
     keys = [x for x in path.strip().split("/") if x != ""]
 
     value = config_dict
@@ -15,7 +15,9 @@ def get_config(config_dict, path: str):
         path.append(key)
         try:
             value = value[key]
-        except KeyError:
-            print(path)
-            raise Exception(f"INTERNAL ERROR: Config setting '{'/'.join(path)}' not found in config.")
+        except KeyError as e:
+            if fail_on_missing:
+                raise Exception(f"INTERNAL ERROR: Config setting '{'/'.join(path)}' not found in config.")
+            else:
+                return e
     return value

@@ -12,6 +12,7 @@ from subprocess import Popen, PIPE
 from ..lib import verbose_enough, hash_wrap
 from ...lib import formatted_print
 from .. import handlers
+from .config import Config
 
 
 class ResourceAccessLog:
@@ -166,32 +167,24 @@ class ObsidianHtmlModule(ABC):
     @property
     @cache
     def config(self):
-        """Read the config.yml file and load the yaml content so that we can easily use the values in the module"""
-        cfg = self.modfile("config.yml", allow_absent=True).read().from_yaml()
-        if cfg is not None:
-            return cfg
+        if not hasattr(self, '_config'):
+            self._config = Config()
+        return self._config
 
-        cfg = self.modfile("user_config.yml", allow_absent=True).read().from_yaml()
-        if cfg is not None:
-            return cfg
-
-        raise Exception("Could not load config file")
 
     def gc(self, path: str, config=None, cached=False):
         """This function makes is easier to get deeply nested config values by allowing path/to/nested/value instead of ["path"]["to"]["nested"]["value"].
         It also handles errors in case of key not found."""
         if config is None:
             config = self.config
-        if cached:
-            return handlers.config.get_config_cached(config, path)
-        return handlers.config.get_config(config, path)
+        return config.gc(path, cached=cached)
 
     @property
     @cache
     def verbosity(self):
         if self.__verbosity__overwrite__ is not None:
             return self.__verbosity__overwrite__
-        return self.config["verbosity"]
+        return self.gc("verbosity")
 
     def path(self, rel_path_str_posix):
         """Returns the path of a resource"""

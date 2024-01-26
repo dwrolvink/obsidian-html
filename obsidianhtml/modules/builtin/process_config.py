@@ -92,7 +92,7 @@ class ProcessConfigModule(ObsidianHtmlModule):
         return
 
     def run(self):
-        config = self.config.unwrap()
+        config = self.config.get_dict()
 
         # check if config is valid
         self.check_required_values_filled_in(config)
@@ -124,11 +124,11 @@ class ProcessConfigModule(ObsidianHtmlModule):
         pass
 
     def integrate_save(self, pb):
-        pb.config = self.config
-        pb.configured_html_prefix = self.config["html_url_prefix"]  # REFACTOR: REPLACE
+        pb.config = self.config.get_dict()
+        pb.configured_html_prefix = self.gc("html_url_prefix")  # REFACTOR: REPLACE
         pb.capabilities_needed = self.retrieve("capabilities_needed")
 
-        pb.verbosity = self.config["verbosity"]
+        pb.verbosity = self.gc("verbosity")
 
 class ProcessConfigAutoModule(ObsidianHtmlModule):
     """
@@ -196,5 +196,5 @@ class ProcessConfigAutoModule(ObsidianHtmlModule):
         pass
 
     def integrate_save(self, pb):
-        pb.config = self.config
+        pb.config = self.config.get_dict()
         pb.verbosity = self.config["verbosity"]
