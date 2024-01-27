@@ -101,7 +101,7 @@ class ObsidianHtmlModule(ABC):
         for key, item in mcfg.items():
             if key not in self.mod_config:
                 raise Exception(f'Module config key "{key}" is unknown to module {self.nametag}')
-            self.mod_config[key]["value"] = item["value"]
+            self.mod_config[key]["value"] = item
 
     def value_of(self, mod_config_key):
         if mod_config_key not in self.mod_config:

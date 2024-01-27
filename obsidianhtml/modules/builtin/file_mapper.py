@@ -22,6 +22,7 @@ from ...core.schema import Schema
 
 from ..base_classes import ObsidianHtmlModule
 from ..base_classes.config import Config
+from ..base_classes.paths import Paths
 
 from .hydrate_file_list import AnnotatedFile
 
@@ -39,7 +40,7 @@ class MappedFile(Schema):
     annotations: AnnotatedFile
 
     @staticmethod
-    def convert_md_to_hmtl(rel_path):
+    def convert_md_to_html(rel_path):
         # ensure Path input
         input_was_str = False
         if not isinstance(rel_path, Path):
@@ -59,6 +60,7 @@ class MappedFile(Schema):
 
         return Path(rel_path_posix)
 
+    """ Mainly used to get a dict from files_mapped.json and recast them into MappedFiles """
     @classmethod
     def from_dict(cls, d):
         return cls(
@@ -71,6 +73,8 @@ class MappedFile(Schema):
             html_path = d["html_path"],
             annotations = AnnotatedFile.from_dict(d["annotations"]),
         )
+
+    """ Take AnnotatedFile from previous module and cast it into a MappedFile """
     @classmethod
     def from_annotated_file(cls, gc, paths, file):
         # determine rel_path
@@ -83,7 +87,7 @@ class MappedFile(Schema):
         if file.is_entrypoint:
             rel_path = 'index.md'
 
-        rel_path_html = cls.convert_md_to_hmtl(rel_path)
+        rel_path_html = cls.convert_md_to_html(rel_path)
         
         # set note and md paths
         # ---
@@ -112,6 +116,64 @@ class MappedFile(Schema):
 
             annotations = file,
         )
+
+    """ Can be used by other modules to splice a generated file into the files_mapped.json file """
+    @classmethod
+    def from_dst_path(cls, target, dst_rel_path):
+        # get input
+        config = Config()
+        paths = Paths().get_dict()
+
+        # cast target "input" to what was configured as input folder
+        if target == "input":
+            if config.gc("toggles/compile_md"):
+                target = "note"
+            else:
+                target = "md"
+
+        # get paths
+        rel_path_html = cls.convert_md_to_html(dst_rel_path)
+        targets = {
+            "note": Path(paths["obsidian_folder"]),
+            "md": Path(paths["md_folder"]),
+            "html": Path(paths["html_output_folder"]),
+        }
+
+        # build full path
+        if target not in targets.keys():
+            raise Exception(f'Target {target} is not valid. Valid targets include: {targets.keys()}')
+        input_path = targets[target].joinpath(dst_rel_path)
+
+        # Assign correct paths
+        if target == "note":
+            note_path = input_path
+            md_path = targets["md"].joinpath(dst_rel_path)
+            html_path = targets["html"].joinpath(rel_path_html)
+        elif target == "md":
+            note_path = None
+            md_path = input_path
+            html_path = targets["html"].joinpath(rel_path_html)
+        elif target == "html":
+            note_path = None
+            md_path = None
+            html_path = input_path
+        
+        # Create objects
+        af = AnnotatedFile.from_file_str(config.gc, paths, input_path, is_generated=True)
+
+        return cls(
+            original_rel_path = dst_rel_path,
+            rel_path = dst_rel_path,
+            rel_path_html = rel_path_html,
+
+            input_path = input_path,
+            note_path = note_path,
+            md_path = md_path,
+            html_path = html_path,
+
+            annotations = af,
+        )
+
 
 
 class FileMapperModule(ObsidianHtmlModule):

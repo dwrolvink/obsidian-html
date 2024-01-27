@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+from pathlib import Path
 
 class Schema:
     # Signal that this class (and subclasses) are of type Schema
@@ -20,6 +21,9 @@ class Schema:
             if '__schema__' in dir(value):
                 d[name] = value.normalize()
                 continue
+            # Path's are not serializable, cast to posix string
+            elif isinstance(value, Path):
+                d[name] = value.as_posix()
             else:
                 d[name] = value
         return d

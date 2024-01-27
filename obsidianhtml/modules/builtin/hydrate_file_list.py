@@ -53,6 +53,10 @@ class AnnotatedFile(Schema):
 
     @staticmethod
     def check_is_entrypoint(gc, paths, file_path):
+        # files created later can be put in e.g. the html folder and these will thus never be the entrypoint
+        if not file_path.is_relative_to(paths["input_folder"]):
+            return False
+
         # get rel_path
         rel_path = file_path.relative_to(paths["input_folder"])
 
@@ -68,16 +72,7 @@ class AnnotatedFile(Schema):
 
     @classmethod
     def from_dict(cls, d):
-        return cls(
-            path = d["path"],
-            is_entrypoint = d["is_entrypoint"],
-            is_note = d["is_note"],
-            is_video = d["is_video"],
-            is_audio = d["is_audio"],
-            is_embeddable = d["is_embeddable"],
-            is_includable_file = d["is_includable_file"],
-            is_parsable_note = d["is_parsable_note"],
-        )
+        return cls(**d)
 
     @classmethod
     def from_file_str(cls, gc, paths, file_str, is_generated=False):
