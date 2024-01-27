@@ -4,12 +4,7 @@ import frontmatter
 import regex as re
 
 from pathlib import Path
-
-from ...core.FileObject import FileObject
-from ...parser.MarkdownPage import MarkdownPage
-
 from ..base_classes import ObsidianHtmlModule
-
 
 class ParseMetadataModule(ObsidianHtmlModule):
     """

@@ -88,6 +88,14 @@ module_list:
         - Must be persistent!
       persistent: True
 
+    - name: hydrate_file_list
+      description: 
+        - Takes the file list and looks up properties, and writes this to index/files_annotated.json
+
+    - name: file_mapper
+      description: 
+        - Determines the file paths for the generated files (md, html)
+
     - name: prepare_output_folders
       description: 
         - Ensures the output folders are created

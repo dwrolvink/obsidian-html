@@ -2,13 +2,6 @@ import os
 import yaml
 
 from pathlib import Path
-
-from ...lib import pushd, WriteFileLog
-
-from ...core.NetworkTree import NetworkTree
-from ...core.FileObject import FileObject
-
-
 from ..base_classes import ObsidianHtmlModule
 
 

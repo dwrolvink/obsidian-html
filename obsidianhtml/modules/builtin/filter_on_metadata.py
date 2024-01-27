@@ -4,9 +4,6 @@ import json
 
 from pathlib import Path
 
-from ...core.FileObject import FileObject
-from ...parser.MarkdownPage import MarkdownPage
-
 from ..base_classes import ObsidianHtmlModule
 
 

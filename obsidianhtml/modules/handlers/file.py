@@ -158,7 +158,7 @@ class File:
 class to_json_encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Path):
-            return obj.resolve().as_posix()
+            return obj.as_posix()
         if isinstance(obj, (date, datetime)):
             return obj.isoformat()
         return obj.__name__

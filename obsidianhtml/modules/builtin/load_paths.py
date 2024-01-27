@@ -104,6 +104,7 @@ class LoadPathsModule(ObsidianHtmlModule):
         # Convert to posix string for exporting
         for key in paths.keys():
             paths[key] = paths[key].as_posix()
+            print(key, paths[key])
 
         # Export
         self.modfile("paths.json", paths).to_json().write()
