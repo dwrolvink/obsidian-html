@@ -25,11 +25,11 @@ class VaultCopyModule(ObsidianHtmlModule):
 
     @staticmethod
     def requires():
-        return tuple(["config.yml", "paths.json", "index/files.json"])
+        return tuple(["config.yml", "paths.json", "index/files.json", "index/markdown_files.json"])
 
     @staticmethod
     def provides():
-        return tuple(["paths.json", "index/files.json"])
+        return tuple(["paths.json", "index/files.json", "index/markdown_files.json"])
 
     @staticmethod
     def alters():
@@ -104,6 +104,18 @@ class VaultCopyModule(ObsidianHtmlModule):
 
         # update index/files.json
         self.modfile("index/files.json", new_files).to_json().write()
+
+        # Update index/markdown_files.json
+        new_markdown_files = []
+        old_input_folder = Path(paths["original_input_folder"])
+        new_input_folder = Path(paths["input_folder"])
+        for file in self.modfile("index/markdown_files.json").read().from_json():
+            new_path = new_input_folder.joinpath(
+                Path(file).relative_to(old_input_folder)
+            )
+            new_markdown_files.append(new_path)
+        self.modfile("index/markdown_files.json", new_markdown_files).to_json().write()
+
 
     def copy_file(self, src_path, dst_path):
         dst_path.parent.mkdir(parents=True, exist_ok=True)
