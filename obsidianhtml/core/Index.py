@@ -44,7 +44,7 @@ class Index:
             paths = json.loads(f.read())
         input_folder = Path(paths["input_folder"])
 
-        with open(module_data_folder + "/index/files_annotated.json", "r") as f:
+        with open(module_data_folder + "/index/files_mapped.json", "r") as f:
             files = json.loads(f.read())
 
         # # add index.md when converting straight from md to html
@@ -53,7 +53,7 @@ class Index:
         #     files.append(input_folder.joinpath("index.md"))
 
         for file in files:
-            file_path = Path(file["path"])
+            file_path = Path(file["input_path"])
             if file_path.is_dir():
                 continue
 

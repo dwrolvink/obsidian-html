@@ -168,19 +168,19 @@ def convert_markdown_to_html(pb):
         rel_entry_path_str = rel_entry_path_str.lower()
 
 
-    # add in the not_created page
-    # -----------------------------------------------------------
-    rel_path="not_created.md"
-    abs_path = pb.paths["md_folder"].joinpath(rel_path)
-    contents = OpenIncludedFile("html/templates/not_created.md")
-    with open(abs_path, 'w') as f:
-        f.write(contents)
+    # # add in the not_created page
+    # # -----------------------------------------------------------
+    # rel_path="not_created.md"
+    # abs_path = pb.paths["md_folder"].joinpath(rel_path)
+    # contents = OpenIncludedFile("html/templates/not_created.md")
+    # with open(abs_path, 'w') as f:
+    #     f.write(contents)
 
-    fo = FileObject(pb)
-    fo.init_markdown_path(abs_path)
-    fo.compile_metadata(abs_path)
-    pb.index.add_file_object_to_file_tree(rel_path, fo)
-    pb.FileFinder.invalidate_cache()
+    # fo = FileObject(pb)
+    # fo.init_markdown_path(abs_path)
+    # fo.compile_metadata(abs_path)
+    # pb.index.add_file_object_to_file_tree(rel_path, fo)
+    # pb.FileFinder.invalidate_cache()
 
 
     # Conversion: md -> html
@@ -201,7 +201,7 @@ def convert_markdown_to_html(pb):
 
     ## not_created
     entrypoint_file_object = pb.index.files["not_created.md"]
-    crawl_markdown_notes_and_convert_to_html(fo, pb)
+    crawl_markdown_notes_and_convert_to_html(entrypoint_file_object, pb)
 
     # Keep going until all other files are processed
     if pb.gc("toggles/process_all") is True:

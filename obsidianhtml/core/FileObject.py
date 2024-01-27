@@ -10,7 +10,8 @@ import shutil  # used to remove a non-empty directory, copy files
 from pathlib import Path
 
 from ..parser.MarkdownPage import MarkdownPage
-from ..lib import get_rel_html_url_prefix, slugify_path, formatted_print
+from ..lib import get_rel_html_url_prefix, slugify_path, formatted_print, deprecated
+from ..modules.builtin.file_mapper import MappedFile
 
 """
 This object class helps us with keeping track of all the paths.
@@ -38,7 +39,7 @@ get the correct link based on the configurations.
 class FileObject:
     pb = None  # contains all config, paths, etc (global pass in config object)
     path = None  # hashtable with all relevant file paths
-    annotated_file = None  # dict as provided by the hydrate_file_list module
+    mapped_file = None  # dict as provided by the file_mapper module
     link = None  # hashtable with all links
     metadata = None  # information on the note, such as modified_date
     md = None  # MarkdownPage object
@@ -47,25 +48,36 @@ class FileObject:
     processed_ntm = False  # whether the note has already been processed in the note --> markdown flow
     processed_mth = False  # whether the note has already been processed in the markdown --> html flow
 
-    def __init__(self, pb, annotated_file=None):
+    def __init__(self, pb, mapped_file_dict=None):
         self.pb = pb
 
         self.path = {}
         self.link = {}
         self.metadata = {}
 
-        self.annotated_file = annotated_file
-
-        # These values are not set under self.compile_metadata()
-        # So the default values need to be set here.
-        self.metadata["is_entrypoint"] = False
+        if mapped_file_dict is not None:
+            self.mapped_file = MappedFile.from_dict(mapped_file_dict)
+            self.metadata["is_entrypoint"] = self.mapped_file.annotations.is_entrypoint
+        else:
+            self.metadata["is_entrypoint"] = False
 
     def load_markdown_page(self, input_type):
-        self.md = MarkdownPage(self, input_type)
+        self.md = MarkdownPage(self, input_type) # edit
         return self.md
 
+    @deprecated
     def fullpath(self, output):
-        return self.path[output]["file_absolute_path"]
+        if output not in ["note", "markdown"]:
+            raise Exception("not implemented")
+
+        if self.mapped_file is None:
+            print(f'WARNING: using fallback! {self.path[output]["file_absolute_path"]}')
+            return self.path[output]["file_absolute_path"]
+
+        if output == "note":
+            return Path(self.mapped_file.note_path)
+        if output == "markdown":
+            return Path(self.mapped_file.md_path)
 
     def is_valid_note(self, output):
         if self.fullpath(output).exists() is False:
@@ -212,11 +224,19 @@ class FileObject:
             self.metadata["is_parsable_note"] = True
 
     def set_times(self, path):
-        if platform.system() == "Windows" or platform.system() == "Darwin":
-            self.metadata["creation_time"] = datetime.datetime.fromtimestamp(os.path.getctime(path)).isoformat()
-            self.metadata["modified_time"] = datetime.datetime.fromtimestamp(os.path.getmtime(path)).isoformat()
-        else:
-            self.metadata["modified_time"] = datetime.datetime.fromtimestamp(os.path.getmtime(path)).isoformat()
+        # if platform.system() == "Windows" or platform.system() == "Darwin":
+        #     self.metadata["creation_time"] = datetime.datetime.fromtimestamp(os.path.getctime(path)).isoformat()
+        #     self.metadata["modified_time"] = datetime.datetime.fromtimestamp(os.path.getmtime(path)).isoformat()
+        # else:
+        #     self.metadata["modified_time"] = datetime.datetime.fromtimestamp(os.path.getmtime(path)).isoformat()
+        if self.mapped_file is None:
+            self.metadata["creation_time"] = None
+            self.metadata["modified_time"] = None
+            return
+
+        self.metadata["creation_time"] = self.mapped_file.annotations.creation_time
+        self.metadata["modified_time"] = self.mapped_file.annotations.modified_time
+        
 
     def get_depth(self, mode):
         return self._get_depth(self.path[mode]["file_relative_path"])

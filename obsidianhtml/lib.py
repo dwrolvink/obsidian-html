@@ -482,3 +482,15 @@ def strip_frontmatter(content):
         text.append(line)
 
     return "\n".join(text)
+
+
+def deprecated(func):
+    """ Signal that the decorated function should no longer be used
+    """
+    if os.getenv("OBSHTML_PRINT_DEPRECATED") is not None or True:
+        print("DEPRECATED: Usage of {func} is discouraged")
+
+    def inner(*args, **kwargs):
+        return func(*args, **kwargs)  
+
+    return inner

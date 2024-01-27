@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 
 class Schema:
@@ -22,3 +23,9 @@ class Schema:
             else:
                 d[name] = value
         return d
+
+    def json(self):
+        return json.dumps(self.normalize(), indent=2)
+
+    def print(self):
+        print(self.json())

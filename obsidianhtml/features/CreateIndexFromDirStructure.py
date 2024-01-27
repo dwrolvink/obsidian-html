@@ -128,7 +128,8 @@ class CreateIndexFromDirStructure:
                         fo = self.pb.index.aliased_files[path_key]
                         name = fo.md.GetNodeName()
                     except:
-                        print(13, path_key)  # , self.pb.index.files.keys())
+                        pass
+                        # print(13, path_key)  # , self.pb.index.files.keys())
 
                 if fo is not None:
                     is_note = fo.metadata["is_note"]
