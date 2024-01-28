@@ -202,7 +202,7 @@ class FileMapperModule(ObsidianHtmlModule):
     def run(self):
         # config
         config = Config()
-        paths = self.modfile("paths.json").read().from_json()
+        paths = self.paths
        
         # get files
         files = self.modfile("index/files_annotated.json").read().from_json()

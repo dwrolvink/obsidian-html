@@ -62,7 +62,7 @@ class ParseMetadataModule(ObsidianHtmlModule):
     def run(self):
         # get input
         files = self.modfile("index/markdown_files.json").read().from_json()
-        paths = self.modfile("paths.json").read().from_json()
+        paths = self.paths
 
         # handle files
         output = {}

@@ -37,7 +37,7 @@ class PrepareOutputFoldersModule(ObsidianHtmlModule):
 
     def run(self):
         # get paths
-        paths = self.modfile("paths.json").read().from_json()
+        paths = self.paths
         for key, value in paths.items():
             paths[key] = Path(value)
 

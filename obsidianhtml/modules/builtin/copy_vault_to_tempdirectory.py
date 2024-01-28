@@ -62,7 +62,7 @@ class VaultCopyModule(ObsidianHtmlModule):
             return
 
         # load input
-        paths = self.modfile("paths.json").read().from_json()
+        paths = self.paths
         for key, value in paths.items():
             paths[key] = Path(value)
 

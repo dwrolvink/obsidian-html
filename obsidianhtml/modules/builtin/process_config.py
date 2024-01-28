@@ -183,7 +183,7 @@ class ProcessConfigAutoModule(ObsidianHtmlModule):
     def run(self):
         # read modfiles
         config = self.config.unwrap()
-        paths = self.modfile("paths.json").read().from_json()
+        paths = self.paths
 
         # fill in auto values
         self.strict_line_breaks_auto(config, original_obsidian_folder=paths["original_obsidian_folder"])

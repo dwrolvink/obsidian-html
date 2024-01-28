@@ -140,7 +140,7 @@ class HydrateFileListModule(ObsidianHtmlModule):
 
     def run(self):
         # get input
-        paths = self.modfile("paths.json").read().from_json()
+        paths = self.paths
         files = self.modfile("index/files.json").read().from_json()
         
         # annotate

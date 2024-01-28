@@ -13,6 +13,7 @@ from ..lib import verbose_enough, hash_wrap
 from ...lib import formatted_print
 from .. import handlers
 from .config import Config
+from .paths import Paths
 
 
 class ResourceAccessLog:
@@ -163,6 +164,14 @@ class ObsidianHtmlModule(ABC):
     def integrate_save(self, pb):
         """Used to integrate a module with the current flow, to become deprecated when all elements use modular structure"""
         raise Exception(f"integrate_save not implemented for module class {self.module_class_name}")
+
+
+    @property
+    @cache
+    def paths(self):
+        if not hasattr(self, '_paths'):
+            self._paths = Paths().get_dict()
+        return self._paths
 
     @property
     @cache
