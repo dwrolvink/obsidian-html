@@ -31,6 +31,8 @@ class File:
 
         self.allow_absent = allow_absent
 
+        self.suffix = Path(path).suffix
+
     def read(self, sneak=False):
         # check whether module reports reading this input (or has already written it)
         if self.is_module_file and sneak == False and self.resource_rel_path not in self.module.requires_files() and self.resource_rel_path not in self.module.written_files.listing():
@@ -95,6 +97,35 @@ class File:
             # write versioned file
             with open(version_path, "w", encoding=self.encoding) as f:
                 f.write(self.contents)
+
+    """ Used to append to a simple list stored in a yaml or json file. If you want to add to a dict, use .insert() instead """
+    def append(self, item, encoding="utf-8"):
+        # get contents to append to
+        if self.contents == "":
+            self.read()
+
+        # convert text to obj
+        if self.suffix not in [".json", ".yaml", ".yml"]:
+            raise Exception(f'modfile.append() is not defined for files that are not json or yaml, use .read() and .write() instead. (Suffix found: {self.suffix})')
+
+        if self.suffix == ".json":
+            obj = self.from_json()
+        elif self.suffix in [".yaml", ".yml"]:
+            obj = self.from_yaml()
+        
+        # append item
+        if not isinstance(obj, list):
+            raise Exception(f'Can only append to a list, object is a {type(obj)}')
+        
+        obj.append(item)
+
+        # write output
+        self.contents = obj
+
+        if self.suffix == ".json":
+            self.to_json().write()
+        elif self.suffix in [".yaml", ".yml"]:
+            self.to_yaml().write()
 
     def exists(self):
         return os.path.isfile(self.path)
