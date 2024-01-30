@@ -37,9 +37,7 @@ class PrepareOutputFoldersModule(ObsidianHtmlModule):
 
     def run(self):
         # get paths
-        paths = self.paths
-        for key, value in paths.items():
-            paths[key] = Path(value)
+        paths = self.paths(cast=True)
 
         # remove previous output
         if self.value_of("clean_existing") is True:

@@ -25,6 +25,9 @@ class MalformedTags(Exception):
     pass
 
 
+def print_debug(*args):
+    print(*args, file=sys.stderr)
+
 def print_global_help_and_exit(exitCode: int, help_file="help_texts/help_text"):
     print()
     version = OpenIncludedFile("version")

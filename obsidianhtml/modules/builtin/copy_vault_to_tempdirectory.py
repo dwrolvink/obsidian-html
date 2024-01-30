@@ -62,9 +62,7 @@ class VaultCopyModule(ObsidianHtmlModule):
             return
 
         # load input
-        paths = self.paths
-        for key, value in paths.items():
-            paths[key] = Path(value)
+        paths = self.paths(cast=True)
 
         # Remove tmpdir if exists, then recreate tmpdir
         tmpdir = paths["appdir"].joinpath("tmpdir/input/").resolve()

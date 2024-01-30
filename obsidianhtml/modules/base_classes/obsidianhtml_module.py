@@ -109,6 +109,16 @@ class ObsidianHtmlModule(ABC):
             raise Exception(f"Value of module config with key {mod_config_key} requested, but not set, in module {self.nametag}")
         return self.mod_config[mod_config_key]["value"]
 
+    def mod_config_as_dict(self):
+        if hasattr(self, '_mod_config_dict'):
+            return self._mod_config_dict
+        
+        self._mod_config_dict = {}
+        for key, value in self.mod_config.items():
+            self._mod_config_dict[key] = value["value"]
+        
+        return self._mod_config_dict
+
     @staticmethod
     @abstractmethod
     def requires(**kwargs):
@@ -166,12 +176,18 @@ class ObsidianHtmlModule(ABC):
         raise Exception(f"integrate_save not implemented for module class {self.module_class_name}")
 
 
-    @property
     @cache
-    def paths(self):
-        if not hasattr(self, '_paths'):
+    def paths(self, cast=False, reload=False):
+        if reload or not hasattr(self, '_paths'):
             self._paths = Paths().get_dict()
-        return self._paths
+
+        if not cast:
+            return self._paths
+
+        cast_paths = {}
+        for key, value in self._paths.items():
+            cast_paths[key] = Path(value)
+        return cast_paths
 
     @property
     @cache

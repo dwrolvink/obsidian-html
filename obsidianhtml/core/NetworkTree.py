@@ -13,11 +13,7 @@ class NetworkTree:
     tree = None
     nid_inc = 0
 
-    def __init__(self, index):
-        # register
-        self.index = index
-        self.pb = index.pb
-
+    def __init__(self):
         self.tree = {"nodes": [], "links": []}
         self.node_lookup = {}
         self.node_lookup_slug = {}
@@ -35,14 +31,16 @@ class NetworkTree:
 
     # INTERFACE
     # ===============================================================================================
-    def add_file_object_to_node_list(self, fo, backlink_node=None, link_type="reference"):
+    def add_file_object_to_node_list(self, mf, backlink_node=None, link_type="reference"):
         # shorthand
-        pb = fo.pb
-        md = fo.md
-        rel_dst_path = md.fo.path["html"]["file_relative_path"]
+        # pb = fo.pb
+        # md = fo.md
+        md = MarkdownPage(mf) # <-- continue here
+        # rel_dst_path = md.fo.path["html"]["file_relative_path"]
+        rel_dst_path = mf.rel_path_html
 
         # Get simple dict template
-        node = pb.index.network_tree.NewNode()
+        node = self.NewNode()
 
         # add all metadata to node, so we can access it later when we need to, once compilation of html is complete
         node["metadata"] = md.metadata.copy()

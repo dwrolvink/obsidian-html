@@ -77,9 +77,7 @@ class GetFileListModule(ObsidianHtmlModule):
 
     def run(self):
         # get paths
-        paths = self.paths
-        for key, value in paths.items():
-            paths[key] = Path(value)
+        paths = self.paths(cast=True)
 
         # get all included files from input_folder
         included_files = self.glob_find(paths["input_folder"], self.value_of("include_glob"))

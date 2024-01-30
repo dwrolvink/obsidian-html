@@ -18,6 +18,29 @@ from ...core.schema import Schema
 
 from ..base_classes import ObsidianHtmlModule
 from ..base_classes.config import Config
+from ..base_classes.paths import Paths
+
+class AnnotatedFileManager:
+    """ The module using this method should provide its modfile method so that we can keep track of who is editing what modfile """
+    @classmethod
+    def recalculate(cls, modfile):
+        config = Config()
+        paths = Paths().get_dict()
+
+        # get
+        afs = modfile.read().from_json()
+        
+        # transform
+        new_afs = []
+        for af in afs:
+            AF = AnnotatedFile.from_dict(af)
+            AF.recalculate(config.gc, paths)
+            new_afs.append(AF.normalize())
+        
+        # write
+        modfile.contents = new_afs
+        modfile.to_json().write()
+
 
 @dataclass
 class AnnotatedFile(Schema):
@@ -32,6 +55,11 @@ class AnnotatedFile(Schema):
     is_generated: bool = False
     modified_time: str = None
     creation_time: str = None
+
+    """ This method can be used to update the files_annotated.json list after changes are made in the settings, such as the entrypoint """
+    def recalculate(self, gc, paths):
+        if self.check_is_entrypoint(gc, paths, Path(self.path)) != self.is_entrypoint:
+            self.is_entrypoint = not self.is_entrypoint
 
     @staticmethod
     def set_times(af):
@@ -140,7 +168,7 @@ class HydrateFileListModule(ObsidianHtmlModule):
 
     def run(self):
         # get input
-        paths = self.paths
+        paths = self.paths()
         files = self.modfile("index/files.json").read().from_json()
         
         # annotate

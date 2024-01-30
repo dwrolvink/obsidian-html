@@ -2,11 +2,28 @@ from functools import cache
 import uuid
 
 from ..lib import bisect
+from ..modules.base_classes.config import Config
+from ..modules.builtin.file_mapper import FileManager
 
 
 class FileFinder:
     def __init__(self):
         self.cache_id=1
+        self.config = Config()
+        self.files = {}
+
+        self.load_file_map()
+
+    def load_file_map(self):
+        mfs = FileManager.get_mapped_files()
+
+        for mf in mfs:
+            # [TODO]
+            # if self.config.gc("toggles/force_filename_to_lowercase"):
+            #     rel_path = rel_path.lower()
+            
+            self.files[mf.rel_path] = mf
+
 
     def invalidate_cache(self):
         self.cache_id=uuid.uuid1()

@@ -8,10 +8,11 @@
 """
 
 import os
-import yaml
+import yaml, json
 import platform
 import datetime
 from dataclasses import dataclass
+from pathlib import Path
 
 from pathlib import Path
 
@@ -24,8 +25,132 @@ from ..base_classes import ObsidianHtmlModule
 from ..base_classes.config import Config
 from ..base_classes.paths import Paths
 
-from .hydrate_file_list import AnnotatedFile
+from .hydrate_file_list import AnnotatedFile, AnnotatedFileManager
 
+
+""" Used by other modules when they generate files to get these published correctly in index/files_annotated.json and index/files_mapped.json """
+class FileManager:
+    """ You can define the files that you will create and get MappedFiles back for each path in dst_rel_paths 
+        If register=True, the index/files_annotated.json and index/files_mapped.json modfiles will be updated immediately.
+            (This is important if other modules are supposed to know they exist)
+        Note that FileManager will use the calling class to access the modfiles, so these will need to have the proper requests/provides set!
+    """
+
+    def __init__(self, calling_module):
+        self.caller = calling_module  # usage: FileManager(self)
+
+    """ Used by core components to get access to the file list """
+    @classmethod
+    def get_mapped_files(cls):
+        paths = Paths().get_dict()
+        with open(Path(paths("module_data_folder")).joinpath("index/files_mapped"), 'r') as f:
+            mfs = json.loads(f.read())
+
+        MFs = []
+        for mf in mfs:
+            MFs.append(MappedFile.from_dict(mf))
+        return MFs
+
+
+
+    def map_generated_files(self, target, dst_rel_paths, register=True):
+        # check args
+        if not isinstance(dst_rel_paths, list):
+            raise Exception(f'dst_rel_paths should be list of desired paths, got {dst_rel_paths}')
+
+        # Get input
+        config = Config()
+        paths = Paths().get_dict()
+
+        # Create MappedFiles
+        mapped_files = []
+        for dst_rel_path in dst_rel_paths:
+            # cast target "input" to what was configured as input folder
+            if target == "input":
+                if config.gc("toggles/compile_md"):
+                    target = "note"
+                else:
+                    target = "md"
+
+            # get paths
+            rel_path_html = MappedFile.convert_md_to_html(dst_rel_path)
+            targets = {
+                "note": Path(paths["obsidian_folder"]),
+                "md": Path(paths["md_folder"]),
+                "html": Path(paths["html_output_folder"]),
+            }
+
+            # build full path
+            if target not in targets.keys():
+                raise Exception(f'Target {target} is not valid. Valid targets include: {targets.keys()}')
+            input_path = targets[target].joinpath(dst_rel_path)
+
+            # Create objects
+            # create AnnotatedFile
+            af = AnnotatedFile.from_file_str(config.gc, paths, input_path, is_generated=True)
+
+            # create MappedFile
+            mapped_files.append(MappedFile.from_annotated_file(config.gc, paths, af))
+
+        # Register MappedFiles
+        if register:
+            self.register_generated_files(mapped_files)
+
+        return mapped_files
+
+    def register_generated_files(self, mapped_files):
+        # get access to modfiles
+        af_modfile = self.caller.modfile("index/files_annotated.json")
+        mf_modfile = self.caller.modfile("index/files_mapped.json")
+
+        # add annotated files to index/files_annotated.json
+        afs = af_modfile.read().from_json()
+        for mf in mapped_files:
+            afs.append(mf.annotations.normalize())
+        af_modfile.contents = afs
+        af_modfile.to_json().write()
+
+        # add mapped files to index/files_mapped.json
+        mfs = mf_modfile.read().from_json()
+        for mf in mapped_files:
+            mfs.append(mf.normalize())
+        mf_modfile.contents = mfs
+        mf_modfile.to_json().write()
+
+
+    """ Whenever you change settings that affect the generated values in the annotated-/mapped file lists,
+        after these lists have already been generated, you should call this function 
+    """
+    @classmethod
+    def recalculate(cls, af_modfile, mf_modfile):
+        config = Config()
+        paths = Paths().get_dict()
+
+        # update index/files_annotated.json
+        AnnotatedFileManager.recalculate(af_modfile)
+
+        # update index/files_mapped.json
+        cls.calculate_mapped_files(config.gc, paths, af_modfile, mf_modfile)
+
+
+    @classmethod
+    def calculate_mapped_files(cls, gc, paths, af_modfile, mf_modfile):
+        # get files
+        files = af_modfile.read().from_json()
+        
+        # determine output locations
+        mapped_files = []
+        for file in files:
+            mapped_files.append(
+                MappedFile.from_annotated_file(gc, paths, AnnotatedFile.from_dict(file)).normalize()
+            )
+
+        # write output
+        mf_modfile.contents = mapped_files
+        mf_modfile.to_json().write()
+
+
+""" Represents a MappedFile as found in index/files_mapped.json """
 @dataclass
 class MappedFile(Schema):
     original_rel_path: str
@@ -117,64 +242,6 @@ class MappedFile(Schema):
             annotations = file,
         )
 
-    """ Can be used by other modules to splice a generated file into the files_mapped.json file """
-    @classmethod
-    def from_dst_path(cls, target, dst_rel_path):
-        # get input
-        config = Config()
-        paths = Paths().get_dict()
-
-        # cast target "input" to what was configured as input folder
-        if target == "input":
-            if config.gc("toggles/compile_md"):
-                target = "note"
-            else:
-                target = "md"
-
-        # get paths
-        rel_path_html = cls.convert_md_to_html(dst_rel_path)
-        targets = {
-            "note": Path(paths["obsidian_folder"]),
-            "md": Path(paths["md_folder"]),
-            "html": Path(paths["html_output_folder"]),
-        }
-
-        # build full path
-        if target not in targets.keys():
-            raise Exception(f'Target {target} is not valid. Valid targets include: {targets.keys()}')
-        input_path = targets[target].joinpath(dst_rel_path)
-
-        # Assign correct paths
-        if target == "note":
-            note_path = input_path
-            md_path = targets["md"].joinpath(dst_rel_path)
-            html_path = targets["html"].joinpath(rel_path_html)
-        elif target == "md":
-            note_path = None
-            md_path = input_path
-            html_path = targets["html"].joinpath(rel_path_html)
-        elif target == "html":
-            note_path = None
-            md_path = None
-            html_path = input_path
-        
-        # Create objects
-        af = AnnotatedFile.from_file_str(config.gc, paths, input_path, is_generated=True)
-
-        return cls(
-            original_rel_path = dst_rel_path,
-            rel_path = dst_rel_path,
-            rel_path_html = rel_path_html,
-
-            input_path = input_path,
-            note_path = note_path,
-            md_path = md_path,
-            html_path = html_path,
-
-            annotations = af,
-        )
-
-
 
 class FileMapperModule(ObsidianHtmlModule):
 
@@ -199,23 +266,12 @@ class FileMapperModule(ObsidianHtmlModule):
         """This function is run before run(), if it returns False, then the module run is skipped entirely. Any other value will be accepted"""
         return
 
-    def run(self):
-        # config
-        config = Config()
-        paths = self.paths
-       
-        # get files
-        files = self.modfile("index/files_annotated.json").read().from_json()
-        
-        # determine output locations
-        mapped_files = []
-        for file in files:
-            mapped_files.append(
-                MappedFile.from_annotated_file(config.gc, paths, AnnotatedFile.from_dict(file)).normalize()
-            )
-
-        # write output
-        self.modfile("index/files_mapped.json", mapped_files).to_json().write()
+    def run(self):       
+        FileManager.calculate_mapped_files(
+            self.config.gc, self.paths(),
+            af_modfile = self.modfile("index/files_annotated.json"),
+            mf_modfile = self.modfile("index/files_mapped.json")
+        )
 
 
     def integrate_load(self, pb):

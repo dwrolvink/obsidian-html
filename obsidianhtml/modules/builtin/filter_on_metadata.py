@@ -171,7 +171,7 @@ class FilterOnMetadataModule(ObsidianHtmlModule):
 
     def run(self):
         # get input
-        paths = self.paths
+        paths = self.paths()
 
         md_files = self.modfile("index/markdown_files.json").read().from_json()
         metadata_dict = self.modfile("index/metadata.json").read().from_json()

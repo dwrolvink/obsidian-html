@@ -101,6 +101,10 @@ module_list:
         - Ensures the output folders are created
         - Optionally removes previous output if it exists in the target directories
 
+    - name: create_index_from_tags
+      description:
+        - Creates a markdown file in the md_folder that contains an overview of all the (selected) tags and the links to the notes that have them
+
   #   - name: hydrate_file_list
   #     description:
   #       - Read and parse the selected files, then create a dict with info such as rel_path, full_path, html_rel_path, etc
@@ -130,32 +134,20 @@ keep_module_file_versions: False
 # Defaults of the modules are shown in the commented blocks
 module_config: {}
   # get_file_list:
-  #   include_glob:
-  #     value: '*'
+  #   include_glob: '*'
   #   exclude_glob:
-  #     value: 
-  #       - ".obsidian/**/*"
-  #       - ".trash/**/*",
-  #       - ".DS_Store/**/*",
-  #       - ".git/**/*",
+  #     - ".obsidian/**/*"
+  #     - ".trash/**/*"
+  #     - ".DS_Store/**/*"
+  #     - ".git/**/*"
 
   # prepare_output_folders:
-  #   clean_existing: 
-  #     description: Files that exist in the output folders are deleted.
-  #     value: True
-  #   fail_on_existing: 
-  #     description: 
-  #       - Exit with error if output folders are not empty.
-  #       - Does nothing if clean_existing = True!
-  #     value: False
-    
+  #   clean_existing: False         # Files that exist in the output folders are deleted.
+  #   fail_on_existing: False       # Exit with error if output folders are not empty. Does nothing if clean_existing = True!
+
   # filter_on_metadata:
-  #   include_on: 
-  #     description: What metadata to include notes on. Empty list means True by default.
-  #     value: [[]]
-  #   exclude_on: 
-  #     description: What metadata to exclude on. Empty list means False by default
-  #     value: [[]] 
+  #   include_on: [[]]             # What metadata to include notes on. Empty list means True by default.
+  #   exclude_on: [[]]             # What metadata to exclude on. Empty list means False by default
   
 ##########################################################################
 #                              OPERATIONS                                #
@@ -478,26 +470,26 @@ toggles:
         - "not_created.html"
       homepage_label: "index"
 
-    # Create a markdown file with links to notes that have one of the given tags.
-    create_index_from_tags:
-      enabled: False
-      verbose: False
-      rel_output_path: 'obs.html/tag_index.md'
-      homepage_label: "index"
-      use_as_homepage: False
-      add_links_in_graph_tree: True
-      tags: []
-      match_on_inline_tags: False
-      styling:
-        include_folder_in_link: False
-      sort:
-        method: 'none'          # <key_value, creation_time, modified_time, none>    ! created_time not available on Linux!
-        key_path: ''            # empty for top level, use ':' to go down multiple levels
-        value_prefix: ''        # in case of multiple values under key_path, match on this prefix, and then remove prefix
-        reverse: false          # false/true reverses output
-        none_on_bottom: true    # will put notes at the bottom that do not have the sort key, otherwise at the top
-      exclude_paths:            # don't included these paths in the dir list
-       - ".gitignore"
+    # # Create a markdown file with links to notes that have one of the given tags.
+    # create_index_from_tags:
+    #   enabled: False
+    #   verbose: False
+    #   rel_output_path: 'obs.html/tag_index.md'
+    #   homepage_label: "index"
+    #   use_as_homepage: False
+    #   add_links_in_graph_tree: True
+    #   tags: []
+    #   match_on_inline_tags: False
+    #   styling:
+    #     include_folder_in_link: False
+    #   sort:
+    #     method: 'none'          # <key_value, creation_time, modified_time, none>    ! created_time not available on Linux!
+    #     key_path: ''            # empty for top level, use ':' to go down multiple levels
+    #     value_prefix: ''        # in case of multiple values under key_path, match on this prefix, and then remove prefix
+    #     reverse: false          # false/true reverses output
+    #     none_on_bottom: true    # will put notes at the bottom that do not have the sort key, otherwise at the top
+    #   exclude_paths:            # don't included these paths in the dir list
+    #    - ".gitignore"
 
     table_of_contents:
       add_toc_when_missing: False          # add "[TOC]" (Table of Contents) when missing
