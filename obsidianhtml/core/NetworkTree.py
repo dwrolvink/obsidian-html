@@ -35,7 +35,7 @@ class NetworkTree:
         # shorthand
         # pb = fo.pb
         # md = fo.md
-        md = MarkdownPage(mf) # <-- continue here
+        md = MarkdownPage(mf)  # <-- continue here
         # rel_dst_path = md.fo.path["html"]["file_relative_path"]
         rel_dst_path = mf.rel_path_html
 

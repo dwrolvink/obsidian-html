@@ -51,7 +51,6 @@ class MarkdownPage:
         else:
             self.metadata = self.pb.metadata[key]
 
-
     def HasTag(self, ttag):
         tags = self.metadata["tags"]
         for tag in tags:
@@ -543,7 +542,7 @@ class MarkdownPage:
                 # Wrap up
                 included_page.RestoreCodeSections()
 
-            included_page.page = f'\n{included_page.page}\n'
+            included_page.page = f"\n{included_page.page}\n"
 
             if self.pb.gc("toggles/wrap_inclusions", cached=True):
                 included_page.page = f'\n<div class="inclusion" markdown="1">\n{included_page.page}\n</div>\n'

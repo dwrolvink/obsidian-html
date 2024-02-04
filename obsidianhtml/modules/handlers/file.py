@@ -99,43 +99,45 @@ class File:
                 f.write(self.contents)
 
     """ Used to append to a simple list stored in a yaml or json file. If you want to add to a dict, use .insert() instead """
+
     def append(self, item):
         self._alter(value=item, operation="append", key=None)
         return self
 
     """ Used to set the value of a key in the top level of a dict stored in a yaml or json file. If you want to add to a list, use .append() instead """
+
     def insert(self, key, value):
         self._alter(value=value, operation="set_key", key=key)
         return self
 
     def _alter(self, value, operation, key=None):
         if operation not in ["append", "set_key"]:
-            raise Exception(f'Operation {operation} not recognized by this function')
-        
+            raise Exception(f"Operation {operation} not recognized by this function")
+
         # get contents to append to
         if self.contents == "":
             self.read()
 
         # convert text to obj
         if self.suffix not in [".json", ".yaml", ".yml"]:
-            raise Exception(f'modfile.append() is not defined for files that are not json or yaml, use .read() and .write() instead. (Suffix found: {self.suffix})')
+            raise Exception(f"modfile.append() is not defined for files that are not json or yaml, use .read() and .write() instead. (Suffix found: {self.suffix})")
 
         if self.suffix == ".json":
             obj = self.from_json()
         elif self.suffix in [".yaml", ".yml"]:
             obj = self.from_yaml()
-        
+
         # Alter the object
         if operation == "append":
             if not isinstance(obj, list):
-                raise Exception(f'Can only append to a list, object is a {type(obj)}')
+                raise Exception(f"Can only append to a list, object is a {type(obj)}")
             obj.append(value)
 
         elif operation == "set_key":
             if not (isinstance(obj, dict) or isinstance(obj, hash_wrap)):
-                raise Exception(f'Can only set key to a dict, object is a {type(obj)}')
+                raise Exception(f"Can only set key to a dict, object is a {type(obj)}")
             obj[key] = value
-            
+
         # write output
         self.contents = obj
 

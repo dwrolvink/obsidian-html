@@ -8,7 +8,7 @@ from ..modules.builtin.file_mapper import FileManager
 
 class FileFinder:
     def __init__(self):
-        self.cache_id=1
+        self.cache_id = 1
         self.config = Config()
         self.files = {}
 
@@ -21,12 +21,11 @@ class FileFinder:
             # [TODO]
             # if self.config.gc("toggles/force_filename_to_lowercase"):
             #     rel_path = rel_path.lower()
-            
+
             self.files[mf.rel_path] = mf
 
-
     def invalidate_cache(self):
-        self.cache_id=uuid.uuid1()
+        self.cache_id = uuid.uuid1()
 
     def GetObsidianFilePath(self, link, pb):
         self.files = pb.index.files

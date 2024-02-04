@@ -5,6 +5,7 @@ from ...lib import print_debug
 from ..base_classes import ObsidianHtmlModule
 from .file_mapper import FileManager, MappedFile
 
+
 class CreateIndexFromTagsModule(ObsidianHtmlModule):
     """
     This module will take the index/files.json file, determine properties per file, and write these to index/files_annotated.json
@@ -12,7 +13,7 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
 
     @staticmethod
     def friendly_name():
-        return "create_index_from_tags"    
+        return "create_index_from_tags"
 
     def define_mod_config_defaults(self):
         self.mod_config["enabled"] = {
@@ -28,11 +29,11 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
             "description": "Print debug info when True",
         }
         self.mod_config["rel_output_path"] = {
-            "value": 'obs.html/tag_index.md',
+            "value": "obs.html/tag_index.md",
             "description": "File path relative to md_folder where to write the index note to",
         }
         self.mod_config["homepage_label"] = {
-            "value": 'index',
+            "value": "index",
             "description": "",
         }
         self.mod_config["use_as_homepage"] = {
@@ -52,21 +53,21 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
                 "include_folder_in_link": False,
             },
             "description": "",
-        }                       
+        }
         self.mod_config["sort"] = {
             "value": {
-                "method": 'none',          # <key_value, creation_time, modified_time, none>    ! created_time not available on Linux!
-                "key_path": '',            # empty for top level, use ':' to go down multiple levels
-                "value_prefix": '',        # in case of multiple values under key_path, match on this prefix, and then remove prefix
-                "reverse": False,          # false/true reverses output
-                "none_on_bottom": True,    # will put notes at the bottom that do not have the sort key, otherwise at the top
+                "method": "none",  # <key_value, creation_time, modified_time, none>    ! created_time not available on Linux!
+                "key_path": "",  # empty for top level, use ':' to go down multiple levels
+                "value_prefix": "",  # in case of multiple values under key_path, match on this prefix, and then remove prefix
+                "reverse": False,  # false/true reverses output
+                "none_on_bottom": True,  # will put notes at the bottom that do not have the sort key, otherwise at the top
             },
             "description": "",
-        }    
+        }
         self.mod_config["exclude_paths"] = {
             "value": [".gitignore"],
             "description": "",
-        }     
+        }
 
     @staticmethod
     def requires():
@@ -79,7 +80,6 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
     @staticmethod
     def alters():
         return tuple()
-
 
     def accept(self, module_data_folder):
         """This function is run before run(), if it returns False, then the module run is skipped entirely. Any other value will be accepted"""
@@ -94,26 +94,21 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
         if self.config.gc("copy_vault_to_tempdir") is False:
             print_debug(
                 "WARNING: The feature 'CREATE INDEX FROM TAGS' needs to write an index file to the obsidian path.",
-                "We don't want to write in your vault, so in order to use this feature set 'copy_vault_to_tempdir: True' in your config."
+                "We don't want to write in your vault, so in order to use this feature set 'copy_vault_to_tempdir: True' in your config.",
             )
             return False
 
-
     def verbose(self):
-        global_verbose = self.config.gc("toggles/verbose_printout", cached=True) 
+        global_verbose = self.config.gc("toggles/verbose_printout", cached=True)
         local_verbose = self.value_of("verbose")
         return global_verbose or local_verbose
-
 
     def run(self):
         # get input
         settings = self.mod_config_as_dict()
 
         # we are creating a new file, make a mapping for this and register it so that other modules know about it
-        index_mf = FileManager(self).map_generated_files(
-            target = "note", 
-            dst_rel_paths = ["__tags_index.md"]
-        )[0]
+        index_mf = FileManager(self).map_generated_files(target="note", dst_rel_paths=["__tags_index.md"])[0]
 
         # extract the definitive target path from the MappedFile
         rel_path = index_mf.rel_path
@@ -133,10 +128,7 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
             self.paths(cast=True, reload=True)
 
             # these path setting affect index/files_annotated.json & index/files_mapped.json, so these need to be recalculated
-            FileManager.recalculate(
-                af_modfile = self.modfile("index/files_annotated.json"),
-                mf_modfile = self.modfile("index/files_mapped.json")
-            )
+            FileManager.recalculate(af_modfile=self.modfile("index/files_annotated.json"), mf_modfile=self.modfile("index/files_mapped.json"))
 
         if self.verbose():
             print_debug("\tWill write the note index to: ", dst_path)
@@ -145,7 +137,6 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
         self.create_index_from_tags(index_mf)
 
         exit()
-
 
     def create_index_from_tags(self, index_mf):
         # get input
@@ -159,7 +150,7 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
         Path(index_mf.input_path).parent.mkdir(exist_ok=True)
         with open(index_mf.input_path, "w", encoding="utf-8") as f:
             f.write(md_content)
-        
+
         # [TODO]
         # # [17] Build graph node/links
         # if pb.gc("toggles/features/create_index_from_tags/add_links_in_graph_tree", cached=True):
@@ -190,7 +181,6 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
         #             link["source"] = bln["id"]
         #             link["target"] = node["id"]
         #             pb.index.network_tree.AddLink(link)
-
 
     def compile_tag_page_markdown(self):
         # get input
@@ -242,7 +232,7 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
             if self.verbose():
                 print_debug(f"\t\tParsing note {page_path_str}")
 
-            continue 
+            continue
 
             # make mdpage object
             md = fo.load_markdown_page("note")  # <---------- [CONTINUE HERE]
@@ -332,7 +322,7 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
                     }  # depr?
                 )
 
-        return "bla","bleh" # [TODO]
+        return "bla", "bleh"  # [TODO]
 
         if len(_files.keys()) == 0:
             raise Exception("No notes found with the given tags.")

@@ -60,7 +60,7 @@ class FileObject:
             self.metadata["is_entrypoint"] = False
 
     def load_markdown_page(self, input_type):
-        self.md = MarkdownPage(self, input_type) # edit
+        self.md = MarkdownPage(self, input_type)  # edit
         return self.md
 
     @deprecated
@@ -85,7 +85,6 @@ class FileObject:
         return True
 
     def init_note_path(self, source_file_absolute_path, compile_metadata=True):
-
         # if self.annotated_file is None:
         #     raise Exception('FileObject should have been instantiated with annotated_file, but wasnt')
         # source_file_absolute_path = Path(self.annotated_file["path"])
@@ -112,10 +111,10 @@ class FileObject:
         if self.path["note"]["file_relative_path"] == self.pb.paths["rel_obsidian_entrypoint"]:
             # rewrite path to index.md if the note is configured as the entrypoint.
             self.metadata["is_entrypoint"] = True
-            
+
             self.path["markdown"]["file_absolute_path"] = target_folder_path.joinpath("index.md")
             self.path["markdown"]["file_relative_path"] = self.path["markdown"]["file_absolute_path"].relative_to(target_folder_path)
-            
+
             # also add self to pb.index.files under the key 'index.md' so it is findable
             self.pb.index.files["index.md"] = self
         else:
@@ -138,7 +137,7 @@ class FileObject:
 
         # compile the path['markdown'] section, or reuse the section from the previous step
         if source_file_absolute_path is None:
-        #if "note" in self.path:
+            # if "note" in self.path:
             source_file_absolute_path = self.path["markdown"]["file_absolute_path"]
         else:
             # source_file_absolute_path = Path(self.annotated_file["path"])
@@ -233,7 +232,6 @@ class FileObject:
 
         self.metadata["creation_time"] = self.mapped_file.annotations.creation_time
         self.metadata["modified_time"] = self.mapped_file.annotations.modified_time
-        
 
     def get_depth(self, mode):
         return self._get_depth(self.path[mode]["file_relative_path"])

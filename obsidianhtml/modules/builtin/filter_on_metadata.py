@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 from ..base_classes import ObsidianHtmlModule
@@ -75,30 +74,32 @@ class FilterOnMetadataModule(ObsidianHtmlModule):
         return False
 
     def test_function_tagged(self, metadata, element):
-        """ {"tagged": "<tag_name>"} - returns true if the tag exists in metadata["tags"] """
+        """{"tagged": "<tag_name>"} - returns true if the tag exists in metadata["tags"]"""
         return element["tagged"] in metadata["tags"]
 
     def test_function_present(self, metadata, element):
-        """ {"present": "<tag_name>"} - returns true if the key exists in metadata """
+        """{"present": "<tag_name>"} - returns true if the key exists in metadata"""
+
         def _test_key_exists(dictionary, key):
             # simple test
-            if '/' not in key:
+            if "/" not in key:
                 return key in dictionary
 
             # multiple levels: test first level, then recurse
             head, tail = key.split("/", 1)
             if head not in dictionary:
                 return False
-            
+
             return _test_key_exists(dictionary[head], tail)
 
         return _test_key_exists(metadata, element["present"])
 
     def test_function_flag(self, metadata, element):
-        """ {"flag": "<tag_name>"} - same as "present" but value of the key should also be true """
+        """{"flag": "<tag_name>"} - same as "present" but value of the key should also be true"""
+
         def _test_key_exists(dictionary, key):
             # simple test
-            if '/' not in key:
+            if "/" not in key:
                 if key in dictionary:
                     return bool(dictionary[key])
                 else:
@@ -108,18 +109,19 @@ class FilterOnMetadataModule(ObsidianHtmlModule):
             head, tail = key.split("/", 1)
             if head not in dictionary:
                 return False
-            
+
             return _test_key_exists(dictionary[head], tail)
-            
+
         return _test_key_exists(metadata, element["flag"])
 
     def test_function_equals(self, metadata, element):
-        """ {"flag": "<tag_name>"} - same as "present" but value of the key should also be equal to the given value """
+        """{"flag": "<tag_name>"} - same as "present" but value of the key should also be equal to the given value"""
+
         def _test_key_has_value(dictionary, key, value):
             # simple test
-            if '/' not in key:
+            if "/" not in key:
                 if key in dictionary:
-                    return (value == dictionary[key])
+                    return value == dictionary[key]
                 else:
                     return False
 
@@ -127,9 +129,9 @@ class FilterOnMetadataModule(ObsidianHtmlModule):
             head, tail = key.split("/", 1)
             if head not in dictionary:
                 return False
-            
+
             return _test_key_has_value(dictionary[head], tail, value)
-            
+
         return _test_key_has_value(metadata, element["equals"][0], element["equals"][1])
 
     def test_publish(self, rel_path, metadata, include_on):

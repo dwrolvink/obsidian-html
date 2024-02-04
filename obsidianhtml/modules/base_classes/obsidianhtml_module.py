@@ -108,13 +108,13 @@ class ObsidianHtmlModule(ABC):
         return self.mod_config[mod_config_key]["value"]
 
     def mod_config_as_dict(self):
-        if hasattr(self, '_mod_config_dict'):
+        if hasattr(self, "_mod_config_dict"):
             return self._mod_config_dict
-        
+
         self._mod_config_dict = {}
         for key, value in self.mod_config.items():
             self._mod_config_dict[key] = value["value"]
-        
+
         return self._mod_config_dict
 
     @staticmethod
@@ -173,10 +173,9 @@ class ObsidianHtmlModule(ABC):
         """Used to integrate a module with the current flow, to become deprecated when all elements use modular structure"""
         raise Exception(f"integrate_save not implemented for module class {self.module_class_name}")
 
-
     @cache
     def paths(self, cast=False, reload=False):
-        if reload or not hasattr(self, '_paths'):
+        if reload or not hasattr(self, "_paths"):
             self._paths = Paths().get_dict()
 
         if not cast:
@@ -190,10 +189,9 @@ class ObsidianHtmlModule(ABC):
     @property
     @cache
     def config(self):
-        if not hasattr(self, '_config'):
+        if not hasattr(self, "_config"):
             self._config = Config()
         return self._config
-
 
     def gc(self, path: str, config=None, cached=False):
         """This function makes is easier to get deeply nested config values by allowing path/to/nested/value instead of ["path"]["to"]["nested"]["value"].

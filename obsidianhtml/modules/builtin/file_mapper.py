@@ -21,21 +21,24 @@ from .hydrate_file_list import AnnotatedFile, AnnotatedFileManager
 
 
 """ Used by other modules when they generate files to get these published correctly in index/files_annotated.json and index/files_mapped.json """
+
+
 class FileManager:
-    """ You can define the files that you will create and get MappedFiles back for each path in dst_rel_paths 
-        If register=True, the index/files_annotated.json and index/files_mapped.json modfiles will be updated immediately.
-            (This is important if other modules are supposed to know they exist)
-        Note that FileManager will use the calling class to access the modfiles, so these will need to have the proper requests/provides set!
+    """You can define the files that you will create and get MappedFiles back for each path in dst_rel_paths
+    If register=True, the index/files_annotated.json and index/files_mapped.json modfiles will be updated immediately.
+        (This is important if other modules are supposed to know they exist)
+    Note that FileManager will use the calling class to access the modfiles, so these will need to have the proper requests/provides set!
     """
 
     def __init__(self, calling_module):
         self.caller = calling_module  # usage: FileManager(self)
 
     """ Used by core components to get access to the file list """
+
     @classmethod
     def get_mapped_files(cls):
         paths = Paths().get_dict()
-        with open(Path(paths("module_data_folder")).joinpath("index/files_mapped"), 'r') as f:
+        with open(Path(paths("module_data_folder")).joinpath("index/files_mapped"), "r") as f:
             mfs = json.loads(f.read())
 
         MFs = []
@@ -43,12 +46,10 @@ class FileManager:
             MFs.append(MappedFile.from_dict(mf))
         return MFs
 
-
-
     def map_generated_files(self, target, dst_rel_paths, register=True):
         # check args
         if not isinstance(dst_rel_paths, list):
-            raise Exception(f'dst_rel_paths should be list of desired paths, got {dst_rel_paths}')
+            raise Exception(f"dst_rel_paths should be list of desired paths, got {dst_rel_paths}")
 
         # Get input
         config = Config()
@@ -65,7 +66,7 @@ class FileManager:
                     target = "md"
 
             # get paths
-            #MappedFile.convert_md_to_html(dst_rel_path)
+            # MappedFile.convert_md_to_html(dst_rel_path)
             targets = {
                 "note": Path(paths["obsidian_folder"]),
                 "md": Path(paths["md_folder"]),
@@ -74,7 +75,7 @@ class FileManager:
 
             # build full path
             if target not in targets.keys():
-                raise Exception(f'Target {target} is not valid. Valid targets include: {targets.keys()}')
+                raise Exception(f"Target {target} is not valid. Valid targets include: {targets.keys()}")
             input_path = targets[target].joinpath(dst_rel_path)
 
             # Create objects
@@ -109,10 +110,10 @@ class FileManager:
         mf_modfile.contents = mfs
         mf_modfile.to_json().write()
 
-
     """ Whenever you change settings that affect the generated values in the annotated-/mapped file lists,
         after these lists have already been generated, you should call this function 
     """
+
     @classmethod
     def recalculate(cls, af_modfile, mf_modfile):
         config = Config()
@@ -124,18 +125,15 @@ class FileManager:
         # update index/files_mapped.json
         cls.calculate_mapped_files(config.gc, paths, af_modfile, mf_modfile)
 
-
     @classmethod
     def calculate_mapped_files(cls, gc, paths, af_modfile, mf_modfile):
         # get files
         files = af_modfile.read().from_json()
-        
+
         # determine output locations
         mapped_files = []
         for file in files:
-            mapped_files.append(
-                MappedFile.from_annotated_file(gc, paths, AnnotatedFile.from_dict(file)).normalize()
-            )
+            mapped_files.append(MappedFile.from_annotated_file(gc, paths, AnnotatedFile.from_dict(file)).normalize())
 
         # write output
         mf_modfile.contents = mapped_files
@@ -143,6 +141,8 @@ class FileManager:
 
 
 """ Represents a MappedFile as found in index/files_mapped.json """
+
+
 @dataclass
 class MappedFile(Schema):
     original_rel_path: str
@@ -152,7 +152,7 @@ class MappedFile(Schema):
     input_path: str
     note_path: str | None
     md_path: str
-    html_path: str 
+    html_path: str
 
     annotations: AnnotatedFile
 
@@ -178,20 +178,22 @@ class MappedFile(Schema):
         return Path(rel_path_posix)
 
     """ Mainly used to get a dict from files_mapped.json and recast them into MappedFiles """
+
     @classmethod
     def from_dict(cls, d):
         return cls(
-            original_rel_path = d["original_rel_path"],
-            rel_path = d["rel_path"],
-            rel_path_html = d["rel_path_html"],
-            input_path = d["input_path"],
-            note_path = d["note_path"],
-            md_path = d["md_path"],
-            html_path = d["html_path"],
-            annotations = AnnotatedFile.from_dict(d["annotations"]),
+            original_rel_path=d["original_rel_path"],
+            rel_path=d["rel_path"],
+            rel_path_html=d["rel_path_html"],
+            input_path=d["input_path"],
+            note_path=d["note_path"],
+            md_path=d["md_path"],
+            html_path=d["html_path"],
+            annotations=AnnotatedFile.from_dict(d["annotations"]),
         )
 
     """ Take AnnotatedFile from previous module and cast it into a MappedFile """
+
     @classmethod
     def from_annotated_file(cls, gc, paths, file):
         # determine rel_path
@@ -202,10 +204,10 @@ class MappedFile(Schema):
         # ---
         rel_path = original_rel_path
         if file.is_entrypoint:
-            rel_path = 'index.md'
+            rel_path = "index.md"
 
         rel_path_html = cls.convert_md_to_html(rel_path)
-        
+
         # set note and md paths
         # ---
         if gc("toggles/compile_md"):
@@ -218,32 +220,28 @@ class MappedFile(Schema):
             md_path = file.path
         html_path = Path(paths["html_output_folder"]).joinpath(rel_path_html).as_posix()
 
-
         # return obj
         # ---
         return cls(
-            original_rel_path = original_rel_path,
-            rel_path = rel_path,
-            rel_path_html = rel_path_html,
-
-            input_path = file.path,
-            note_path = note_path,
-            md_path = md_path,
-            html_path = html_path,
-
-            annotations = file,
+            original_rel_path=original_rel_path,
+            rel_path=rel_path,
+            rel_path_html=rel_path_html,
+            input_path=file.path,
+            note_path=note_path,
+            md_path=md_path,
+            html_path=html_path,
+            annotations=file,
         )
 
 
 class FileMapperModule(ObsidianHtmlModule):
-
     @staticmethod
     def friendly_name():
-        return "file_mapper"    
+        return "file_mapper"
 
     @staticmethod
     def requires():
-        return tuple(["index/files_annotated.json","paths.json"])
+        return tuple(["index/files_annotated.json", "paths.json"])
 
     @staticmethod
     def provides():
@@ -253,18 +251,12 @@ class FileMapperModule(ObsidianHtmlModule):
     def alters():
         return tuple()
 
-
     def accept(self, module_data_folder):
         """This function is run before run(), if it returns False, then the module run is skipped entirely. Any other value will be accepted"""
         return
 
-    def run(self):       
-        FileManager.calculate_mapped_files(
-            self.config.gc, self.paths(),
-            af_modfile = self.modfile("index/files_annotated.json"),
-            mf_modfile = self.modfile("index/files_mapped.json")
-        )
-
+    def run(self):
+        FileManager.calculate_mapped_files(self.config.gc, self.paths(), af_modfile=self.modfile("index/files_annotated.json"), mf_modfile=self.modfile("index/files_mapped.json"))
 
     def integrate_load(self, pb):
         """Used to integrate a module with the current flow, to become deprecated when all elements use modular structure"""

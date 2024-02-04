@@ -12,10 +12,9 @@ class VaultCopyModule(ObsidianHtmlModule):
     when the function ends.
     """
 
-
     @staticmethod
     def friendly_name():
-        return "copy_vault_to_tempdirectory"    
+        return "copy_vault_to_tempdirectory"
 
     @staticmethod
     def requires():
@@ -102,12 +101,9 @@ class VaultCopyModule(ObsidianHtmlModule):
         old_input_folder = Path(paths["original_input_folder"])
         new_input_folder = Path(paths["input_folder"])
         for file in self.modfile("index/markdown_files.json").read().from_json():
-            new_path = new_input_folder.joinpath(
-                Path(file).relative_to(old_input_folder)
-            )
+            new_path = new_input_folder.joinpath(Path(file).relative_to(old_input_folder))
             new_markdown_files.append(new_path)
         self.modfile("index/markdown_files.json", new_markdown_files).to_json().write()
-
 
     def copy_file(self, src_path, dst_path):
         dst_path.parent.mkdir(parents=True, exist_ok=True)

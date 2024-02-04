@@ -9,6 +9,7 @@ class ProcessConfigModule(ObsidianHtmlModule):
     After merging the user_config with the default_config to arrive at the config.yml, we need to do some checks,
     and derrive values from the config to make decision making easier later on.
     """
+
     @staticmethod
     def friendly_name():
         return "process_config"
@@ -129,6 +130,7 @@ class ProcessConfigModule(ObsidianHtmlModule):
 
         pb.verbosity = self.gc("verbosity")
 
+
 class ProcessConfigAutoModule(ObsidianHtmlModule):
     """
     Some values in the config can have value "auto". This module aims to fill in these values.
@@ -147,10 +149,10 @@ class ProcessConfigAutoModule(ObsidianHtmlModule):
         return tuple()
 
     def strict_line_breaks_auto(self, config, original_obsidian_folder):
-        """ 
-            When auto is set, it will attempt to read (vault)/.obsidian/app.json, and look for 'strictLineBreaks'.
-            If the app.json file is not found, it will default to false (the default in obsidian)
-            If the strictLineBreaks key is not found, it will default to false
+        """
+        When auto is set, it will attempt to read (vault)/.obsidian/app.json, and look for 'strictLineBreaks'.
+        If the app.json file is not found, it will default to false (the default in obsidian)
+        If the strictLineBreaks key is not found, it will default to false
         """
 
         # do not execute if value is not auto
@@ -162,7 +164,7 @@ class ProcessConfigAutoModule(ObsidianHtmlModule):
             app_json_path = Path(original_obsidian_folder).joinpath(".obsidian/app.json")
             if not app_json_path.exists():
                 return False
-            with open(app_json_path, 'r') as f:
+            with open(app_json_path, "r") as f:
                 obs_conf = json.loads(f.read())
             if "strictLineBreaks" not in obs_conf.keys():
                 return False
@@ -173,7 +175,6 @@ class ProcessConfigAutoModule(ObsidianHtmlModule):
 
         # set value in config
         config["toggles"]["strict_line_breaks"] = val
-
 
     def accept(self, module_data_folder):
         """This function is run before run(), if it returns False, then the module run is skipped entirely. Any other value will be accepted"""
@@ -189,7 +190,6 @@ class ProcessConfigAutoModule(ObsidianHtmlModule):
 
         # Export config
         self.modfile("config.yml", config).to_yaml().write()
-
 
     def integrate_load(self, pb):
         pass

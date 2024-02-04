@@ -27,6 +27,7 @@ class MalformedTags(Exception):
 def print_debug(*args):
     print(*args, file=sys.stderr)
 
+
 def print_global_help_and_exit(exitCode: int, help_file="help_texts/help_text"):
     print()
     version = OpenIncludedFile("version")
@@ -101,11 +102,11 @@ def slugify_path(value, separator="-", unicode=False, skip_chars_re=r"/\."):
     # avoids "test?.html" turning into "test-.html" instead of "test.html"
     suffix = ""
     if value.endswith(".html"):
-        value = re.sub(r'\.html$', '', value)
+        value = re.sub(r"\.html$", "", value)
         suffix = ".html"
-    
+
     slugified_value = slugify(value, separator, unicode, skip_chars_re)
-    return f'{slugified_value}{suffix}'
+    return f"{slugified_value}{suffix}"
 
 
 def slugify(value, separator="-", unicode=False, skip_chars_re=""):
@@ -440,19 +441,19 @@ def bisect(input, separator, squash_tail=False):
 
 def strip_frontmatter(content):
     """
-        [enter yaml]
-          if first non-empty line = "---" (no whitespace allowed) -> enter yaml
-          else -> return none
-        [exit yaml]
-          if line = "---" (no whitespace allowed) -> exit yaml        
-        [in yaml]
-          write line to text with newline
+    [enter yaml]
+      if first non-empty line = "---" (no whitespace allowed) -> enter yaml
+      else -> return none
+    [exit yaml]
+      if line = "---" (no whitespace allowed) -> exit yaml
+    [in yaml]
+      write line to text with newline
     """
 
     first_line = True
     in_yaml = False
     text = []
-    
+
     lines = content.split("\n")
     for line in lines:
         if first_line:
@@ -471,12 +472,11 @@ def strip_frontmatter(content):
             # first line is not exactly "---" -> we don't have a yaml block
             return content
 
-        
         # exit yaml block
         if line == "---":
             in_yaml = False
             continue
-        
+
         # don't record yaml lines
         if in_yaml:
             continue
@@ -487,12 +487,11 @@ def strip_frontmatter(content):
 
 
 def deprecated(func):
-    """ Signal that the decorated function should no longer be used
-    """
+    """Signal that the decorated function should no longer be used"""
     if os.getenv("OBSHTML_PRINT_DEPRECATED") is not None or True:
         print("DEPRECATED: Usage of {func} is discouraged")
 
     def inner(*args, **kwargs):
-        return func(*args, **kwargs)  
+        return func(*args, **kwargs)
 
     return inner

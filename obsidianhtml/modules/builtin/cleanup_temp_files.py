@@ -9,7 +9,7 @@ class CleanupTempFilesModule(ObsidianHtmlModule):
 
     @staticmethod
     def friendly_name():
-        return "cleanup_temp_files"    
+        return "cleanup_temp_files"
 
     @staticmethod
     def requires():

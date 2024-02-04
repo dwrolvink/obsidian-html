@@ -1,9 +1,7 @@
-
 from .ConfigManager import Config
 from .FileFinder import FileFinder
 from ..features.Search import SearchHead
 from ..features.CreateIndexFromDirStructure import CreateIndexFromDirStructure
-
 
 
 class PicknickBasket:
@@ -26,9 +24,9 @@ class PicknickBasket:
         self.jars = {}
         # self.network_tree = NetworkTree(self.verbose)
 
-        self.search = None # set by self.init_search()
-        self.FileFinder = None # set by init_filefinder  
-        
+        self.search = None  # set by self.init_search()
+        self.FileFinder = None  # set by init_filefinder
+
         self.ConfigManager = Config(self)
         self.plugin_settings = {"embedded_note_titles": {}}  # <- does nothing at the moment, should be factored out
 
@@ -41,6 +39,7 @@ class PicknickBasket:
 
     def init_search(self):
         self.search = SearchHead()
+
     def init_filefinder(self):
         self.FileFinder = FileFinder()
 

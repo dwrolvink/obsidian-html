@@ -165,7 +165,6 @@ def convert_markdown_to_html(pb):
     if pb.gc("toggles/force_filename_to_lowercase", cached=True):
         rel_entry_path_str = rel_entry_path_str.lower()
 
-
     # # add in the not_created page
     # # -----------------------------------------------------------
     # rel_path="not_created.md"
@@ -179,7 +178,6 @@ def convert_markdown_to_html(pb):
     # fo.compile_metadata(abs_path)
     # pb.index.add_file_object_to_file_tree(rel_path, fo)
     # pb.FileFinder.invalidate_cache()
-
 
     # Conversion: md -> html
     # -----------------------------------------------------------

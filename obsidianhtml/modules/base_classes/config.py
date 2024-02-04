@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from ..lib import hash_wrap
 from .. import handlers
 
+
 @dataclass
 class Config:
     config: dict = None
@@ -15,9 +16,9 @@ class Config:
         if mdf_path is None:
             raise Exception("ENV var OBS_MODULE_DATA_FOLDER was not set, this is expected to be the case when this module is run")
 
-        with open(Path(mdf_path).joinpath("config.yml"), 'r') as f:
+        with open(Path(mdf_path).joinpath("config.yml"), "r") as f:
             self.config = yaml.safe_load(f.read())
-        
+
     def gc(self, path: str, config=None, cached=False):
         """This function makes is easier to get deeply nested config values by allowing path/to/nested/value instead of ["path"]["to"]["nested"]["value"].
         It also handles errors in case of key not found."""
@@ -31,6 +32,7 @@ class Config:
         return self.config
 
     """ Test if key is set in config """
+
     def has(self, path):
         res = handlers.config.get_config(self.config, path, fail_on_missing=False)
         if type(res) is KeyError:

@@ -1,7 +1,4 @@
-
-
 # from ..base_classes import ObsidianHtmlModule
-
 
 
 # class SetSubfolderModule(ObsidianHtmlModule):

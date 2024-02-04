@@ -19,8 +19,10 @@ from ..base_classes import ObsidianHtmlModule
 from ..base_classes.config import Config
 from ..base_classes.paths import Paths
 
+
 class AnnotatedFileManager:
-    """ The module using this method should provide its modfile method so that we can keep track of who is editing what modfile """
+    """The module using this method should provide its modfile method so that we can keep track of who is editing what modfile"""
+
     @classmethod
     def recalculate(cls, modfile):
         config = Config()
@@ -28,14 +30,14 @@ class AnnotatedFileManager:
 
         # get
         afs = modfile.read().from_json()
-        
+
         # transform
         new_afs = []
         for af in afs:
             AF = AnnotatedFile.from_dict(af)
             AF.recalculate(config.gc, paths)
             new_afs.append(AF.normalize())
-        
+
         # write
         modfile.contents = new_afs
         modfile.to_json().write()
@@ -56,6 +58,7 @@ class AnnotatedFile(Schema):
     creation_time: str = None
 
     """ This method can be used to update the files_annotated.json list after changes are made in the settings, such as the entrypoint """
+
     def recalculate(self, gc, paths):
         if self.check_is_entrypoint(gc, paths, Path(self.path)) != self.is_entrypoint:
             self.is_entrypoint = not self.is_entrypoint
@@ -68,9 +71,9 @@ class AnnotatedFile(Schema):
             af.creation_time = datetime.datetime.now().isoformat()
             return af
 
-        # look up modified time 
+        # look up modified time
         af.modified_time = datetime.datetime.fromtimestamp(os.path.getmtime(af.path)).isoformat()
-        
+
         # created time not available (consistently) on linux
         if platform.system() == "Windows" or platform.system() == "Darwin":
             af.creation_time = datetime.datetime.fromtimestamp(os.path.getctime(af.path)).isoformat()
@@ -102,15 +105,15 @@ class AnnotatedFile(Schema):
     @classmethod
     def from_file_str(cls, gc, paths, file_str, is_generated=False):
         af = cls(
-            path = file_str,
-            is_entrypoint = False,
-            is_note = False,
-            is_video = False,
-            is_audio = False,
-            is_embeddable = False,
-            is_includable_file = False,
-            is_parsable_note = False,
-            is_generated = is_generated,
+            path=file_str,
+            is_entrypoint=False,
+            is_note=False,
+            is_video=False,
+            is_audio=False,
+            is_embeddable=False,
+            is_includable_file=False,
+            is_parsable_note=False,
+            is_generated=is_generated,
         )
 
         file_path = Path(file_str)
@@ -144,7 +147,7 @@ class HydrateFileListModule(ObsidianHtmlModule):
 
     @staticmethod
     def friendly_name():
-        return "hydrate_file_list"    
+        return "hydrate_file_list"
 
     @staticmethod
     def requires():
@@ -158,7 +161,6 @@ class HydrateFileListModule(ObsidianHtmlModule):
     def alters():
         return tuple()
 
-
     def accept(self, module_data_folder):
         """This function is run before run(), if it returns False, then the module run is skipped entirely. Any other value will be accepted"""
         return
@@ -167,19 +169,15 @@ class HydrateFileListModule(ObsidianHtmlModule):
         # get input
         paths = self.paths()
         files = self.modfile("index/files.json").read().from_json()
-        
+
         # annotate
         annotated_files = []
         for file in files:
-            annotated_files.append(
-                AnnotatedFile.from_file_str(self.config.gc, paths, file).normalize()
-            )
+            annotated_files.append(AnnotatedFile.from_file_str(self.config.gc, paths, file).normalize())
 
         # add in generated files
         input_folder = Path(paths["input_folder"])
-        annotated_files.append(
-            AnnotatedFile.from_file_str(self.config.gc, paths, input_folder.joinpath("not_created.md"), is_generated=True).normalize()
-        )
+        annotated_files.append(AnnotatedFile.from_file_str(self.config.gc, paths, input_folder.joinpath("not_created.md"), is_generated=True).normalize())
 
         # check that we have only one entrypoint
         eps = []
@@ -190,10 +188,9 @@ class HydrateFileListModule(ObsidianHtmlModule):
             raise Exception("No files were found that match the entrypoint defined!")
         if len(eps) > 1:
             raise Exception(f"Multiple entrypoints were found when one was expected: {eps}")
-        
+
         # write output
         self.modfile("index/files_annotated.json", annotated_files).to_json().write()
-
 
     def integrate_load(self, pb):
         """Used to integrate a module with the current flow, to become deprecated when all elements use modular structure"""

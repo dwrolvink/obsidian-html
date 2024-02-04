@@ -1,4 +1,3 @@
-
 from ..base_classes import ObsidianHtmlModule, run_binary
 
 

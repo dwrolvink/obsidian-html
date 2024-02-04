@@ -4,6 +4,7 @@ import regex as re
 from pathlib import Path
 from ..base_classes import ObsidianHtmlModule
 
+
 class ParseMetadataModule(ObsidianHtmlModule):
     """
     This module will load all the files in index/markdown_files.json and load the metadata and inline tags, which are combined
@@ -95,4 +96,3 @@ class ParseMetadataModule(ObsidianHtmlModule):
         """Used to integrate a module with the current flow, to become deprecated when all elements use modular structure"""
         metadata = self.modfile("index/metadata.json").read().from_json()
         pb.metadata = metadata
-

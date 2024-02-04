@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from ..base_classes import ObsidianHtmlModule
 
@@ -12,7 +11,7 @@ class GetFileListModule(ObsidianHtmlModule):
 
     @staticmethod
     def friendly_name():
-        return "get_file_list"    
+        return "get_file_list"
 
     @staticmethod
     def requires():

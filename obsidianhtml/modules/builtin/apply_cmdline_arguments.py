@@ -19,7 +19,7 @@ class ApplyCommandlineArgumentsModule(ObsidianHtmlModule):
 
     @staticmethod
     def friendly_name():
-        return "apply_cmdline_arguments"    
+        return "apply_cmdline_arguments"
 
     @staticmethod
     def requires():
