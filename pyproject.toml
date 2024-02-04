@@ -4,11 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 #select = ["E"] #F841"]
-ignore = ["E402", "E741", "E722", "E501"]
+ignore = ["E401", "E402", "E741", "E722", "E501", "F401", "F841"]
 # E501: Line too long; Comments will also cause this
-# E402: Module level import not at top of file; Docstring will cause this error
 # E741: Ambiguous variable name; Will get to this later
 # E722: Do not use bare `except`; Will get to this later
-
+# F841: Local variable `<variable>` is assigned to but never used; sometimes this is clarifying or caused by commenting out code
+# E401: Multiple imports on one line; who cares?
+# E402: Module level import not at top of file; Docstring will cause this error
+# F401: `.obsidianhtml_module.ObsidianHtmlModule` imported but unused; this is often wrong, and will cause issues if we try to "fix" it
 [tool.black]
 line-length = 200

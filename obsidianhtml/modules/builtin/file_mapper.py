@@ -11,9 +11,6 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from pathlib import Path
-
-
 from ...core.schema import Schema
 
 from ..base_classes import ObsidianHtmlModule

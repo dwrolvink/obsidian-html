@@ -362,7 +362,7 @@ def run_binary(command_list):
     if len(error) > 0:
         print(error.decode())
     if p.returncode != 0:
-        self.print("error", f'binary module action `{" ".join(command)}` failed with error: \n\n{error.decode()}')
+        print("error", f'binary module action `{" ".join(command_list)}` failed with error: \n\n{error.decode()}')
 
     try:
         res = json.loads(output.decode())

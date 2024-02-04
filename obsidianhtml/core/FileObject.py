@@ -335,4 +335,4 @@ class FileObject:
             if not os.path.exists(dst_file_path):
                 os.link(src_file_path, dst_file_path)
         else:
-            raise Exception(f'Bad copy_output_file_method "{copy_output_file_method}", expected one of: default, copy, symlink, hardlink')
+            raise Exception(f'Bad copy_output_file_method "{link_mode}", expected one of: default, copy, symlink, hardlink')
