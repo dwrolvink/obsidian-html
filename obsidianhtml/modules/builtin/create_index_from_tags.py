@@ -6,7 +6,7 @@ from ...lib import print_debug
 from ..base_classes import ObsidianHtmlModule
 from ..base_classes.config import Config
 from .hydrate_file_list import AnnotatedFileManager
-from .file_mapper import FileManager
+from .file_mapper import FileManager, MappedFile
 
 class CreateIndexFromTagsModule(ObsidianHtmlModule):
     """

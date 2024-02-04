@@ -29,8 +29,9 @@ class PicknickBasket:
         self.jars = {}
         # self.network_tree = NetworkTree(self.verbose)
 
-        self.search = SearchHead()
-        self.FileFinder = FileFinder()
+        self.search = None # set by self.init_search()
+        self.FileFinder = None # set by init_filefinder  
+        
         self.ConfigManager = Config(self)
         self.plugin_settings = {"embedded_note_titles": {}}  # <- does nothing at the moment, should be factored out
 
@@ -40,6 +41,11 @@ class PicknickBasket:
         # In the beginning not every action will update the state, call self.reset_state to unset the state so that we are not reporting stale information.
         self.state = {}
         self.reset_state()
+
+    def init_search(self):
+        self.search = SearchHead()
+    def init_filefinder(self):
+        self.FileFinder = FileFinder()
 
     def reset_state(self):
         self.state["action"] = "Unknown"
