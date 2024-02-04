@@ -1,4 +1,3 @@
-import yaml
 from pathlib import Path
 
 from ..base_classes import ObsidianHtmlModule
@@ -40,7 +39,7 @@ class LoadGrapherModule(ObsidianHtmlModule):
         gc = self.gc
 
         # write empty files that we promised to provide and exit
-        if gc("toggles/compile_html") == False:
+        if gc("toggles/compile_html") is False:
             self.modfile("html/graph.template.html", "").write()
             self.modfile("html/graph_full_page.template.html", "").write()
             self.modfile("graphers.json", "[{}]").write()

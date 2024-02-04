@@ -2,7 +2,6 @@ from __future__ import annotations
 import string
 import regex as re  # regex string finding/replacing
 from pathlib import Path
-import frontmatter  # remove yaml frontmatter from md files
 import urllib.parse  # convert link characters like %
 
 from ..lib import slugify, MalformedTags, OpenIncludedFile, bisect, strip_frontmatter
@@ -140,8 +139,6 @@ class MarkdownPage:
             url = self.fo.get_link("html")
 
         # collect tags
-        tags = self.get_tags()
-
         for tag in self.get_tags():
             # test is str
             if not isinstance(tag, str):

@@ -1,5 +1,3 @@
-import os
-import yaml
 
 from pathlib import Path
 from ..base_classes import ObsidianHtmlModule
@@ -90,7 +88,7 @@ class GetFileListModule(ObsidianHtmlModule):
         selected_files.sort()
 
         # remove dirs
-        selected_files = [x for x in selected_files if Path(x).is_dir() == False]
+        selected_files = [x for x in selected_files if Path(x).is_dir() is False]
 
         # check that the entrypoint file is not being filtered out
         if paths["entrypoint"].as_posix() not in selected_files:

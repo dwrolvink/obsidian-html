@@ -35,7 +35,7 @@ class File:
 
     def read(self, sneak=False):
         # check whether module reports reading this input (or has already written it)
-        if self.is_module_file and sneak == False and self.resource_rel_path not in self.module.requires_files() and self.resource_rel_path not in self.module.written_files.listing():
+        if self.is_module_file and sneak is False and self.resource_rel_path not in self.module.requires_files() and self.resource_rel_path not in self.module.written_files.listing():
             # excempted methods from requirement to report reading/writing
             stack = inspect.stack()
             if stack[1][3] not in ("integrate_save", "integrate_load"):
@@ -49,7 +49,7 @@ class File:
 
         # record reading the file
         # temporary: while integrate methods exist: don't report reads for the integrate save method
-        if sneak == False and inspect.stack()[1][3] not in ("integrate_save",):
+        if sneak is False and inspect.stack()[1][3] not in ("integrate_save",):
             self.module.read_files.add(self.resource_rel_path)
 
         # Handle file not existing

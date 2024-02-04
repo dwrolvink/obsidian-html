@@ -1,10 +1,7 @@
-import glob
-import os
 import json
 
 from pathlib import Path
 
-from ..lib import pushd, WriteFileLog
 
 from .NetworkTree import NetworkTree
 from .FileObject import FileObject
@@ -42,7 +39,7 @@ class Index:
 
         with open(module_data_folder + "/paths.json", "r") as f:
             paths = json.loads(f.read())
-        input_folder = Path(paths["input_folder"])
+        Path(paths["input_folder"])
 
         with open(module_data_folder + "/index/files_mapped.json", "r") as f:
             files = json.loads(f.read())

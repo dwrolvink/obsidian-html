@@ -1,6 +1,5 @@
 from ..base_classes import ObsidianHtmlModule
 
-import yaml
 import json
 from pathlib import Path
 

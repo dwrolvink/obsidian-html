@@ -1,12 +1,9 @@
-import yaml
-from pathlib import Path
 
-from .ConfigManager import Config, find_user_config_yaml_path
+from .ConfigManager import Config
 from .FileFinder import FileFinder
 from ..features.Search import SearchHead
 from ..features.CreateIndexFromDirStructure import CreateIndexFromDirStructure
 
-from ..modules import controller as module_controller
 
 
 class PicknickBasket:

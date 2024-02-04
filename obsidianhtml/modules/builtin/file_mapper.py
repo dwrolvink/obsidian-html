@@ -7,18 +7,13 @@
       - html_path: the file path for the generated html file, will use updated rel_path
 """
 
-import os
-import yaml, json
-import platform
-import datetime
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
 from pathlib import Path
 
-from ...lib import pushd, WriteFileLog
 
-from ...core.NetworkTree import NetworkTree
 from ...core.schema import Schema
 
 from ..base_classes import ObsidianHtmlModule
@@ -73,7 +68,7 @@ class FileManager:
                     target = "md"
 
             # get paths
-            rel_path_html = MappedFile.convert_md_to_html(dst_rel_path)
+            #MappedFile.convert_md_to_html(dst_rel_path)
             targets = {
                 "note": Path(paths["obsidian_folder"]),
                 "md": Path(paths["md_folder"]),

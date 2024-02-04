@@ -1,15 +1,10 @@
-import os
 import yaml
-import json
 
 from pathlib import Path
 
 from ..base_classes import ObsidianHtmlModule
 
 from ...lib import (
-    OpenIncludedFile,
-    YamlIndentDumper,
-    get_obshtml_appdir_folder_path,
     get_default_appdir_config_yaml_path,
 )
 

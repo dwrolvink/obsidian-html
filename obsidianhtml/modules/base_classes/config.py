@@ -1,7 +1,6 @@
 import os, yaml
 from pathlib import Path
 from dataclasses import dataclass
-from functools import cache
 
 from ..lib import hash_wrap
 from .. import handlers

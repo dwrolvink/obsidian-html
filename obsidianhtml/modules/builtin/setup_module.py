@@ -11,9 +11,7 @@ know where to find the user config file until we have parsed the sys.argv
 self.print commands will be cached until we know the verbosity, and then printed.
 """
 
-import sys
 import os
-import json
 import yaml
 import uuid
 import shutil
@@ -75,10 +73,10 @@ class SetupModule(ObsidianHtmlModule):
 
         # Try "config.yml", as per https://github.com/obsidian-html/obsidian-html/issues/57
         if os.path.isfile("config.yml"):
-            self.cached_print("info", f"No config provided, using ./config.yml (Default config path)")
+            self.cached_print("info", "No config provided, using ./config.yml (Default config path)")
             return "config.yml"
         if os.path.isfile("config.yaml"):
-            self.cached_print("info", f"No config provided, using ./config.yaml (Default config path)")
+            self.cached_print("info", "No config provided, using ./config.yaml (Default config path)")
             return "config.yaml"
 
         # Try appdir
@@ -236,7 +234,7 @@ class SetupModule(ObsidianHtmlModule):
         # first add the setup module, which is always executed, and is not configurable
 
         module_class = builtin_module_aliases["setup_module"]
-        key = f"setup_module (SetupModule)"
+        key = "setup_module (SetupModule)"
         parse_module_for_modfiles(module_overview["<internal>"], modfile_overview, module_class=module_class, key=key)
 
         for key, module_class in builtin_module_aliases.items():

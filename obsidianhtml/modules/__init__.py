@@ -1,7 +1,7 @@
 from . import builtin
 from .base_classes import ObsidianHtmlModule
 
-import json, sys
+import sys
 import inspect, importlib
 from pkgutil import iter_modules
 

@@ -2,7 +2,6 @@ import os
 import sys
 import re  # regex string finding/replacing
 import yaml
-import json
 import unicodedata
 
 from pathlib import Path  #

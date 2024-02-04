@@ -72,7 +72,7 @@ def run_module(
     # - note that module.integrate_load is always run, as this might provide information required
     #   by module.accept() to determine if the module should run or not.
     accept = getattr(module, "accept")
-    if accept(module_data_folder) == False:
+    if accept(module_data_folder) is False:
         return None
 
     # run method
@@ -153,7 +153,7 @@ def run_post_modules(
                 f'[ {"DEBUG":^5} ] * module.controller.run_post_module ::',
                 f"{listing['name']}.{method}()",
             )
-        result = getattr(meta_module_obj, method)(module=module_obj, run_module_result=module_run_result)
+        getattr(meta_module_obj, method)(module=module_obj, run_module_result=module_run_result)
 
 
 def get_module(
@@ -197,7 +197,7 @@ def get_module(
 def get_module_class(module_name, module_class_name, module_source):
     # try getting the module based on the name, in case of builtin modules
     # this saves dumb typing
-    if module_source == None:
+    if module_source is None:
         if module_name in builtin_module_aliases.keys():
             return builtin_module_aliases[module_name]
         elif module_class_name in builtin_module_aliases.keys():
@@ -234,7 +234,7 @@ def instantiate_module(
     # REUSE
     # ---
     if instantiated_modules is not None:
-        if persistent == True and module_class.__name__ in instantiated_modules:
+        if persistent is True and module_class.__name__ in instantiated_modules:
             if verbose_enough("debug", verbosity):
                 print(
                     f'[ {"DEBUG":^5} ] {"* "*level}module.controller.instantiate_module :: reuse of persistent module:',
@@ -261,7 +261,7 @@ def instantiate_module(
 
     # STORE
     # ---
-    if instantiated_modules is not None and module_obj.persistent == True:
+    if instantiated_modules is not None and module_obj.persistent is True:
         instantiated_modules[module_class.__name__] = module_obj
 
     return module_obj

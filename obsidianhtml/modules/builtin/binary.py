@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 
 from ..base_classes import ObsidianHtmlModule, run_binary
 

@@ -1,4 +1,3 @@
-import yaml
 
 from pathlib import Path
 from appdirs import AppDirs

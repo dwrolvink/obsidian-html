@@ -1,4 +1,3 @@
-import yaml
 from pathlib import Path
 
 from ..base_classes import ObsidianHtmlModule
@@ -48,7 +47,7 @@ class HtmlTemplaterModule(ObsidianHtmlModule):
         gc = self.gc
 
         # write empty file that we promised to provide and exit, if html is not compiled
-        if gc("toggles/compile_html") == False:
+        if gc("toggles/compile_html") is False:
             self.modfile("html/note.template.html", "").write()
             return
 

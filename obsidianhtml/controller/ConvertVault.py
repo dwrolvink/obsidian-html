@@ -1,4 +1,3 @@
-import sys
 import frontmatter
 import gzip
 import yaml
@@ -6,11 +5,10 @@ import yaml
 import regex as re  # regex string finding/replacing
 
 from urllib.parse import unquote
-from pathlib import Path
 
 from .. import md2html
 
-from ..lib import CreateStaticFilesFolders, WriteFileLog, simpleHash, get_html_url_prefix, retain_reference, OpenIncludedFile, slugify
+from ..lib import CreateStaticFilesFolders, simpleHash, get_html_url_prefix, slugify
 
 from ..compiler.Templating import PopulateTemplate
 from ..core.PicknickBasket import PicknickBasket

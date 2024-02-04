@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import datetime
-import platform
 import os
 import os.path
 import shutil  # used to remove a non-empty directory, copy files
@@ -166,7 +164,6 @@ class FileObject:
         if src_rel_path_posix == self.pb.paths["rel_md_entrypoint_path"]:
             # rewrite path to index.md if the markdown note is configured as the entrypoint.
             self.metadata["is_entrypoint"] = True
-            target_rel_path_posix = "index.md"
 
         # rewrite .md to .html
         src_rel_path = convert_md_to_hmtl(src_rel_path_posix)

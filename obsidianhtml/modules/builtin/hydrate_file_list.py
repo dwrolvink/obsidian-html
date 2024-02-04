@@ -7,7 +7,6 @@
 """
 
 import os
-import yaml
 import platform
 import datetime
 from dataclasses import dataclass
@@ -63,8 +62,6 @@ class AnnotatedFile(Schema):
 
     @staticmethod
     def set_times(af):
-        times = {}
-
         # file does not exist yet, just give current time
         if af.is_generated:
             af.modified_time = datetime.datetime.now().isoformat()

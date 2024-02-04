@@ -1,11 +1,8 @@
-import sys
 from pathlib import Path
 
 from ...lib import print_debug
 
 from ..base_classes import ObsidianHtmlModule
-from ..base_classes.config import Config
-from .hydrate_file_list import AnnotatedFileManager
 from .file_mapper import FileManager, MappedFile
 
 class CreateIndexFromTagsModule(ObsidianHtmlModule):
@@ -133,7 +130,7 @@ class CreateIndexFromTagsModule(ObsidianHtmlModule):
             paths_mf.write()
 
             # reload paths
-            paths = self.paths(cast=True, reload=True)
+            self.paths(cast=True, reload=True)
 
             # these path setting affect index/files_annotated.json & index/files_mapped.json, so these need to be recalculated
             FileManager.recalculate(

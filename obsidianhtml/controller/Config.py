@@ -88,7 +88,7 @@ def config_set(args):
         arg_failure = True
     file_path = Path(args["file"]).resolve()
 
-    if file_path.exists() == False:
+    if file_path.exists() is False:
         formatted_print("ERROR", f"Config file {file_path} does not exist")
         exit(1)
 
@@ -109,9 +109,9 @@ def config_list(args):
 
     def get_entrypoint(config):
         skip_md = False
-        if "toggles" in config and "compile_md" in config["toggles"] and config["toggles"]["compile_md"] == False:
+        if "toggles" in config and "compile_md" in config["toggles"] and config["toggles"]["compile_md"] is False:
             skip_md = True
-        if skip_md == False:
+        if skip_md is False:
             if "obsidian_entrypoint_path_str" in config:
                 return config["obsidian_entrypoint_path_str"]
         else:
@@ -122,9 +122,9 @@ def config_list(args):
 
     def get_markdown_output_folder(config, default_config):
         skip_md = False
-        if "toggles" in config and "compile_md" in config["toggles"] and config["toggles"]["compile_md"] == False:
+        if "toggles" in config and "compile_md" in config["toggles"] and config["toggles"]["compile_md"] is False:
             skip_md = True
-        if skip_md == True:
+        if skip_md is True:
             return ""
 
         if "md_folder_path_str" in config:
@@ -134,9 +134,9 @@ def config_list(args):
 
     def get_html_output_folder(config, default_config):
         skip_html = False
-        if "toggles" in config and "compile_html" in config["toggles"] and config["toggles"]["compile_html"] == False:
+        if "toggles" in config and "compile_html" in config["toggles"] and config["toggles"]["compile_html"] is False:
             skip_html = True
-        if skip_html == True:
+        if skip_html is True:
             return ""
 
         if "html_output_folder_path_str" in config:

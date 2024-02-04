@@ -1,5 +1,3 @@
-import os
-import yaml
 import json
 import inspect
 
@@ -9,7 +7,7 @@ from pathlib import Path
 from datetime import datetime
 from subprocess import Popen, PIPE
 
-from ..lib import verbose_enough, hash_wrap
+from ..lib import verbose_enough
 from ...lib import formatted_print
 from .. import handlers
 from .config import Config

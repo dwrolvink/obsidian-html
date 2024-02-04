@@ -7,7 +7,6 @@ from .. import md2html
 from ..features.SidePane import get_side_pane_id_by_content_selector
 from ..features.add_toc_when_missing import gc_add_toc_when_missing, add_toc_when_missing
 
-from ..parser.HeaderTree import convert_markdown_to_header_tree
 from ..parser.MarkdownLink import MarkdownLink
 
 from ..core.FileObject import FileObject

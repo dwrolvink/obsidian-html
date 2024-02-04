@@ -1,14 +1,8 @@
-import yaml
 import shutil
-import os
-import glob
-import tempfile
 
-from subprocess import Popen, PIPE
 from pathlib import Path
 
 from ..base_classes import ObsidianHtmlModule
-from ...lib import is_installed, pushd, should_ignore
 
 
 class VaultCopyModule(ObsidianHtmlModule):

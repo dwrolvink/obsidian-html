@@ -1,11 +1,9 @@
 import sys
-import yaml
 
 from functools import cache
 from pathlib import Path
 
-from .. import print_global_help_and_exit
-from ..lib import OpenIncludedFile, find_vault_folder_by_entrypoint, get_default_appdir_config_yaml_path
+from ..lib import get_default_appdir_config_yaml_path
 
 from . import Types as T
 

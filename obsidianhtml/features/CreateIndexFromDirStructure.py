@@ -289,14 +289,14 @@ class CreateIndexFromDirStructure:
                     html += (
                         "\t" * tab_level
                         + f'<button id="folder-{self.uid}" class="dir-button folder_note ``css-dir-active-{folder_id}`` ``css-folder-note-active-{folder_note_rel_path_str}``" href="{url}" onclick="{onclick}">'
-                        + f'<div class="file-icon"></div>'
+                        + '<div class="file-icon"></div>'
                         + f'{fnpf}{tree["name"]}</button>\n'
                     )
                 else:
                     html += (
                         "\t" * tab_level
                         + f'<button id="folder-{self.uid}" class="dir-button ``css-dir-active-{folder_id}``" onclick="toggle_dir(this.id)">'
-                        + f'<div class="file-icon"></div>'
+                        + '<div class="file-icon"></div>'
                         + f'{tree["name"]}</button>\n'
                     )
 
