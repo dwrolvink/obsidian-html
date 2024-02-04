@@ -12,5 +12,6 @@ ignore = ["E401", "E402", "E741", "E722", "E501", "F401", "F841"]
 # E401: Multiple imports on one line; who cares?
 # E402: Module level import not at top of file; Docstring will cause this error
 # F401: `.obsidianhtml_module.ObsidianHtmlModule` imported but unused; this is often wrong, and will cause issues if we try to "fix" it
+
 [tool.black]
 line-length = 200
